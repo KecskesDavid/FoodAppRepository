@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_restaurant_list"
-        android:name="com.example.foodproject.ui.restaurantlist.RestarurantListFragment"
+        android:name="com.example.foodproject.fragments.restaurantlist.RestarurantListFragment"
         android:label="@string/title_restaurants_home"
         tools:layout="@layout/fragment_restaurant_list" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.foodproject.ui.dashboard.DashboardFragment"
+        android:name="com.example.foodproject.fragments.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.foodproject.ui.profile.ProfileFragment"
+        android:name="com.example.foodproject.fragments.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.foodproject.ui.profile
+package com.example.foodproject.fragments.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
