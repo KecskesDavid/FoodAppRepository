@@ -1,6 +1,7 @@
 package com.example.foodproject
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,12 +12,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.foodproject.data.Restaurant
 import com.example.foodproject.data.RestaurantViewModel
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,10 +34,11 @@ class MainActivity : AppCompatActivity() {
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
-        viewModel.getRestaurant()
+        viewModel.getCountries()
 
-        viewModel.myRespons.observe(this, Observer {response ->
+        viewModel.myResponsCountry.observe(this, Observer { response ->
             //todo: add to database
+            test.text= response.body().countries[0]
         })
 
 
