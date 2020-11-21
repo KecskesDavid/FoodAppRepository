@@ -1,5 +1,6 @@
 package com.example.foodproject.data
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.net.URL
@@ -19,7 +20,7 @@ data class Restaurant (
     val lat: Double,
     val lng: Double,
     val price: Double,
-    val reserve_url: URL,
-    val mobile_reserve_url: URL,
-    val image_url: URL
+    val reserve_url: String,
+    val mobile_reserve_url: String,
+    val image_url: String
     )
