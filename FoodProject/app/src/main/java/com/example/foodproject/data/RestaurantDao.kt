@@ -10,7 +10,7 @@ import com.example.foodproject.model.Restaurant
 @Dao
 interface RestaurantDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addRestaurant(restaurant: Restaurant)
 
 

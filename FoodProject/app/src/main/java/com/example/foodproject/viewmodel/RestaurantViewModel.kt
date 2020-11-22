@@ -1,9 +1,11 @@
-package com.example.foodproject.data
+package com.example.foodproject.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.example.foodproject.data.AppDatabase
+import com.example.foodproject.repository.RestaurantRepository
 import com.example.foodproject.model.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

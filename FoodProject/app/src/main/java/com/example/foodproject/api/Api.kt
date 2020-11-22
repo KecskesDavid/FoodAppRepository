@@ -2,8 +2,10 @@ package com.example.foodproject.api
 
 import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.model.Restaurant
+import com.example.foodproject.model.RestaurantListResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface Api {
 
@@ -12,4 +14,11 @@ interface Api {
 
     @GET("/api/countries")
     suspend fun getCountries(): Response<CountriesResponse>
+
+    @GET("/api/restaurants")
+    suspend fun getRestaurantPage(
+            @Query("state") state : String,
+            @Query("page") page : Int
+    ) : Response<RestaurantListResponse>
+
 }
