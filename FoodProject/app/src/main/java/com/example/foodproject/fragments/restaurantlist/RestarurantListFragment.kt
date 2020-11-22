@@ -22,10 +22,9 @@ class RestarurantListFragment : Fragment() {
         restaurantListViewModel =
                 ViewModelProvider(this).get(RestaurantListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        restaurantListViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
+
+
         return root
     }
 }
