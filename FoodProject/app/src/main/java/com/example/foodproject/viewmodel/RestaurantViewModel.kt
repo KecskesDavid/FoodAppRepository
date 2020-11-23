@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class RestaurantViewModel (application: Application): AndroidViewModel(application) {
 
-    private val readAllRestaurants: LiveData<List<Restaurant>>
+    val readAllRestaurants: LiveData<List<Restaurant>>
     private val repository: RestaurantRepository
 
     init{
