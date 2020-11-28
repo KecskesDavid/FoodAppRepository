@@ -7,5 +7,6 @@ class Constants {
     companion object{
         const val BASE_URL="http://opentable.herokuapp.com"
         lateinit var states: ArrayList<String>
+        lateinit var cities: ArrayList<String>
     }
 }

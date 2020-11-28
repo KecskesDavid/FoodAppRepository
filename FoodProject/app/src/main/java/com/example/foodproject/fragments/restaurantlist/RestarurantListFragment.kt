@@ -58,7 +58,7 @@ class RestarurantListFragment : Fragment() {
 
 
         //filter for states
-        val selectBtn : Button = view.findViewById(R.id.goBtn)
+        val selectBtn : Button = view.findViewById(R.id.filterStateBtn)
         selectBtn.setOnClickListener {
 
             //get the filter state

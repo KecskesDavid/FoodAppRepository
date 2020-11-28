@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/candal"
         android:text="Restaurants"
         android:textColor="@color/gold"
@@ -23,35 +23,56 @@
         android:id="@+id/restaurantRecView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="130dp"
         android:clipToPadding="false"
         android:padding="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countryFilter"
+        app:layout_constraintTop_toBottomOf="@+id/cityFilter"
         tools:listitem="@layout/restaurant_list_item" />
 
     <Spinner
         android:id="@+id/countryFilter"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/goBtn"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/filterStateBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    <Spinner
+        android:id="@+id/cityFilter"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/filterCityBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countryFilter" />
+
     <Button
-        android:id="@+id/goBtn"
+        android:id="@+id/filterStateBtn"
         android:layout_width="56dp"
         android:layout_height="36dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="Go"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/countryFilter"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/filterCityBtn"
+        android:layout_width="56dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="2dp"
+        android:text="Go"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cityFilter"
+        app:layout_constraintTop_toBottomOf="@+id/filterStateBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
