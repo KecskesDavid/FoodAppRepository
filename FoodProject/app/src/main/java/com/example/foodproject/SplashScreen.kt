@@ -38,16 +38,28 @@ class SplashScreen : AppCompatActivity() {
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
         viewModel.getCountries()
+        viewModel.getCities()
 
         viewModel.myResponsCountry.observe(this, Observer { response ->
 
             val states = arrayListOf<String>()
-            response.body()!!.countries.forEach() { states.add(it); }
+            response.body()!!.countries.forEach() { states.add(it) }
 
-            //filling up util class which contains every possible filter (state)
+            //filling up utils class which contains every possible filter (state)
             Constants.states = states
 
         })
+
+        viewModel.myResponsCities.observe(this, Observer { response ->
+
+            val cities = arrayListOf<String>()
+            response.body()!!.cities.forEach() { cities.add(it) }
+
+            //filling up utils class which contains every possible filter (cities)
+            Constants.cities = cities
+
+        })
+
 
         //delay for the splasj screem
         Handler().postDelayed({

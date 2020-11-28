@@ -1,5 +1,6 @@
 package com.example.foodproject.api
 
+import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
@@ -15,10 +16,20 @@ interface Api {
     @GET("/api/countries")
     suspend fun getCountries(): Response<CountriesResponse>
 
+    @GET("/api/cities")
+    suspend fun getCities(): Response<CitiesResponse>
+
     @GET("/api/restaurants")
-    suspend fun getRestaurantPage(
+    suspend fun getRestaurantCountriesPage(
             @Query("state") state : String,
             @Query("page") page : Int
     ) : Response<RestaurantListResponse>
+
+    @GET("/api/restaurants")
+    suspend fun getRestaurantCitiesPage(
+            @Query("city") city : String,
+            @Query("page") page : Int
+    ) : Response<RestaurantListResponse>
+
 
 }

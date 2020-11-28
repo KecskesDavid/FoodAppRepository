@@ -3,6 +3,7 @@ package com.example.foodproject.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
@@ -14,6 +15,7 @@ class RetrofitViewModel(private val repository: RetrofitRepository): ViewModel()
 
     val myRespons: MutableLiveData<Response<Restaurant>> = MutableLiveData()
     val myResponsCountry: MutableLiveData<Response<CountriesResponse>> = MutableLiveData()
+    val myResponsCities: MutableLiveData<Response<CitiesResponse>> = MutableLiveData()
     val myResponsPage: MutableLiveData<Response<RestaurantListResponse>> = MutableLiveData()
 
     fun getRestaurant(){
@@ -30,10 +32,25 @@ class RetrofitViewModel(private val repository: RetrofitRepository): ViewModel()
         }
     }
 
-    fun getRestaurantPage(state:String, page:Int)
+    fun getCities(){
+        viewModelScope.launch {
+            val response = repository.getCities()
+            myResponsCities.value = response
+        }
+    }
+
+    fun getRestaurantCountriesPage(state:String, page:Int)
     {
         viewModelScope.launch {
-            val response = repository.getRestaurantPage(state,page)
+            val response = repository.getRestaurantCountriesPage(state,page)
+            myResponsPage.value = response
+        }
+    }
+
+    fun getRestaurantCitiesPage(city:String, page:Int)
+    {
+        viewModelScope.launch {
+            val response = repository.getRestaurantCitiesPage(city,page)
             myResponsPage.value = response
         }
     }

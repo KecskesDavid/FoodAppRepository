@@ -1,6 +1,7 @@
 package com.example.foodproject.repository
 
 import com.example.foodproject.api.RetrofitInstance
+import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
@@ -12,5 +13,9 @@ class RetrofitRepository {
 
     suspend fun getCountries(): Response<CountriesResponse> = RetrofitInstance.api.getCountries()
 
-    suspend fun getRestaurantPage(state: String, page: Int): Response<RestaurantListResponse> = RetrofitInstance.api.getRestaurantPage(state,page)
+    suspend fun getCities(): Response<CitiesResponse> = RetrofitInstance.api.getCities()
+
+    suspend fun getRestaurantCountriesPage(state: String, page: Int): Response<RestaurantListResponse> = RetrofitInstance.api.getRestaurantCountriesPage(state,page)
+
+    suspend fun getRestaurantCitiesPage(city: String, page: Int): Response<RestaurantListResponse> = RetrofitInstance.api.getRestaurantCitiesPage(city,page)
 }

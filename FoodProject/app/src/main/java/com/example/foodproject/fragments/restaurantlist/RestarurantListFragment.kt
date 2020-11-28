@@ -38,10 +38,15 @@ class RestarurantListFragment : Fragment() {
                 ViewModelProvider(this).get(RestaurantListViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
 
-        //Filling the spinner with the filters, countries
-        val spinner: Spinner = view.findViewById(R.id.countryFilter)
-        val myAdapter = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.states) }
-        spinner.adapter = myAdapter
+        //Filling the spinner with the filters, countries, cities
+        val spinnerState: Spinner = view.findViewById(R.id.countryFilter)
+        val myAdapterState = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.states) }
+        spinnerState.adapter = myAdapterState
+
+        val spinnerCity: Spinner = view.findViewById(R.id.cityFilter)
+        val myAdapterCity = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.cities) }
+        spinnerCity.adapter = myAdapterCity
+
 
         //RecyclerView with the list of Restaurants
         val adapter = RestaurantAdapter()
@@ -58,11 +63,11 @@ class RestarurantListFragment : Fragment() {
 
 
         //filter for states
-        val selectBtn : Button = view.findViewById(R.id.filterStateBtn)
-        selectBtn.setOnClickListener {
+        val filterStateBtn : Button = view.findViewById(R.id.filterStateBtn)
+        filterStateBtn.setOnClickListener {
 
             //get the filter state
-            val state = spinner.selectedItem.toString()
+            val state = spinnerState.selectedItem.toString()
 
             val restaurantsToShow = arrayListOf<Restaurant>()
 
@@ -71,7 +76,9 @@ class RestarurantListFragment : Fragment() {
             //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
 
             for( i in 1..5 ) {
-                viewModel.getRestaurantPage(state, i)
+
+                //todo: syncronization problem
+                viewModel.getRestaurantCountriesPage(state, i)
 
                 viewModel.myResponsPage.value?.body()?.restaurants?.forEach{
                     restaurantsToShow.add(it)
@@ -88,6 +95,38 @@ class RestarurantListFragment : Fragment() {
         }
 
         //todo filter for cities
+        val filterCityBtn : Button = view.findViewById(R.id.filterCityBtn)
+        filterCityBtn.setOnClickListener {
+
+            //get the filter state
+            val city = spinnerCity.selectedItem.toString()
+
+            val restaurantsToShow = arrayListOf<Restaurant>()
+
+            //todo get every restaurant not inly 5 pages
+            //viewModel.getRestaurantPage(state, 0)
+            //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
+
+           // for( i in 1..3 ) {
+
+                //todo: syncronization problem
+                viewModel.getRestaurantCitiesPage(city, 1)
+
+                viewModel.myResponsPage.value?.body()?.restaurants?.forEach{
+                    restaurantsToShow.add(it)
+                }
+
+           // }
+
+            if(restaurantsToShow.size == 0) {
+                Toast.makeText(context,"There is no restaurants in this city!",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
+                adapter.setData(restaurantsToShow)
+            }
+        }
+
+
 
         return view
     }
