@@ -3,9 +3,12 @@ package com.example.foodproject.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.model.Restaurant
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
@@ -32,6 +35,7 @@ class RestaurantAdapter: RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapte
     override fun onBindViewHolder(holder: RestaurantAdapterHolder, position: Int) {
         val currentItem = list[position]
 
+        //todo
         //holder.imageView.setImageResource(currentItem.image_url)
         holder.nameTxt.text=currentItem.name
         holder.tellNrTxt.text=currentItem.phone

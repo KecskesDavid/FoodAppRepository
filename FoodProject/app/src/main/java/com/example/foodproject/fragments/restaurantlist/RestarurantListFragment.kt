@@ -4,19 +4,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
+import com.example.foodproject.model.Restaurant
+import com.example.foodproject.repository.RetrofitRepository
+import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RestaurantViewModel
+import com.example.foodproject.viewmodel.RetrofitViewModel
+import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 
 class RestarurantListFragment : Fragment() {
 
     private lateinit var restaurantListViewModel: RestaurantListViewModel
     private lateinit var restaurantViewModel: RestaurantViewModel
+    private lateinit var viewModel: RetrofitViewModel
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -25,19 +36,59 @@ class RestarurantListFragment : Fragment() {
     ): View? {
         restaurantListViewModel =
                 ViewModelProvider(this).get(RestaurantListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
+
+        //Filling the spinner with the filters, countries
+        val spinner: Spinner = view.findViewById(R.id.countryFilter)
+        val myAdapter = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.states) }
+        spinner.adapter = myAdapter
 
         //RecyclerView with the list of Restaurants
         val adapter = RestaurantAdapter()
-        val recyclerViewRestaurant = root.restaurantRecView
+        val recyclerViewRestaurant = view.restaurantRecView
         recyclerViewRestaurant.adapter=adapter
         recyclerViewRestaurant.layoutManager=LinearLayoutManager(requireContext())
 
-        restaurantViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
-        restaurantViewModel.readAllRestaurants.observe(viewLifecycleOwner, Observer {rest ->
-            adapter.setData(rest)
-        })
 
-        return root
+        //filter the data by state
+        restaurantViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
+        val repository = RetrofitRepository()
+        val viewModelFactory = RetrofitViewModelFactory(repository)
+        viewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
+
+
+        //filter for states
+        val selectBtn : Button = view.findViewById(R.id.goBtn)
+        selectBtn.setOnClickListener {
+
+            //get the filter state
+            val state = spinner.selectedItem.toString()
+
+            val restaurantsToShow = arrayListOf<Restaurant>()
+
+            //todo get every restaurant not inly 5 pages
+            //viewModel.getRestaurantPage(state, 0)
+            //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
+
+            for( i in 1..5 ) {
+                viewModel.getRestaurantPage(state, i)
+
+                viewModel.myResponsPage.value?.body()?.restaurants?.forEach{
+                    restaurantsToShow.add(it)
+                }
+
+            }
+
+            if(restaurantsToShow.size == 0) {
+                Toast.makeText(context,"There is no restaurants in this state!",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
+                adapter.setData(restaurantsToShow)
+            }
+        }
+
+        //todo filter for cities
+
+        return view
     }
 }

@@ -8,13 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.repository.RetrofitRepository
+import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
@@ -30,50 +34,29 @@ class SplashScreen : AppCompatActivity() {
 
         mRestaurantViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
 
-        //todo: should be moved to splashscreen
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
         viewModel.getCountries()
-        viewModel.getRestaurantPage("CA",1)
 
         viewModel.myResponsCountry.observe(this, Observer { response ->
-            //todo: add to database
 
-            val states = mutableListOf<String>()
-            response.body()!!.countries.forEach() { states.add(it) }
+            val states = arrayListOf<String>()
+            response.body()!!.countries.forEach() { states.add(it); }
 
-            states.forEach {
-                //var pageNr=1
-                //var ok = true
-                //while(ok)
+            //filling up util class which contains every possible filter (state)
+            Constants.states = states
 
-                viewModel.getRestaurantPage(it, 1)
-                viewModel.myResponsPage.observe(this, Observer { resp ->
-
-                    if( resp.body()?.restaurants?.size != 0  )
-                    {
-                        Log.d("resp", resp.body()?.restaurants?.get(0)?.address.toString())
-                        //resp.body()?.restaurants?.forEach { mRestaurantViewModel.addRestaurant(it) }
-                        //++pageNr
-                    }
-                    //  else
-                    {
-                        //   ok=false
-                    }
-                })
-
-            }
         })
 
-
+        //delay for the splasj screem
         Handler().postDelayed({
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         },3000)
     }
 
-    //to make from url bitmap
+    //todo:to make from url bitmap
 //    private fun toBitmap(url: String): Bitmap
 //    {
 //        val loading = ImageLoader(requireContext())

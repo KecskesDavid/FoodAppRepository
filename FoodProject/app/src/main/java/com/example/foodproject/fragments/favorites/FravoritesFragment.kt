@@ -1,4 +1,4 @@
-package com.example.foodproject.fragments.dashboard
+package com.example.foodproject.fragments.favorites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,22 +10,22 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.foodproject.R
 
-class DashboardFragment : Fragment() {
+class FravoritesFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var favoritesViewModel: FavoritesViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        favoritesViewModel =
+                ViewModelProvider(this).get(FavoritesViewModel::class.java)
+        val view = inflater.inflate(R.layout.fragment_favorites, container, false)
+        val textView: TextView = view.findViewById(R.id.text_dashboard)
+        favoritesViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        return root
+        return view
     }
 }
