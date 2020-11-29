@@ -1,22 +1,28 @@
 package com.example.foodproject.adapters
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foodproject.MainActivity
 import com.example.foodproject.R
+import com.example.foodproject.fragments.DetailsFragment
 import com.example.foodproject.model.Restaurant
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.example.foodproject.MainActivity
-import com.example.foodproject.fragments.DetailsFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>(){
@@ -34,7 +40,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
     //only once called
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantAdapterHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.restaurant_list_item,parent,false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.restaurant_list_item, parent, false)
 
         return RestaurantAdapterHolder(itemView)
     }
@@ -43,13 +49,17 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     override fun onBindViewHolder(holder: RestaurantAdapterHolder, position: Int) {
         val currentItem = list[position]
 
-        //todo
-        //holder.imageView.setImageResource(currentItem.image_url)
+        //not very effective
+        GlobalScope.launch {
+            val bitmap = getBitmapFromURL(currentItem.image_url) !!
+            (context as MainActivity).runOnUiThread { holder.imageView.setImageBitmap(bitmap) }
+        }
         holder.nameTxt.text=currentItem.name
         holder.tellNrTxt.text=currentItem.phone
         holder.adressTxt.text=currentItem.address
 
         holder.itemView.setOnClickListener {
+
             val bundle = Bundle()
 
             bundle.putString(IMAGE_VIEW, currentItem.image_url)
@@ -69,6 +79,13 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             transaction.commit()
         }
 
+        holder.addToFav.setOnClickListener{
+            holder.addToFav.setImageResource(R.drawable.ic_favorite)
+            Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
+
+            //todo add to favorites table
+        }
+
     }
 
     override fun getItemCount() = list.size
@@ -76,6 +93,21 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     fun setData(restaurant: List<Restaurant>){
         this.list = restaurant
         notifyDataSetChanged()
+    }
+
+    fun getBitmapFromURL(src: String?): Bitmap? {
+        return try {
+            val url = URL(src)
+            val connection: HttpURLConnection = url
+                    .openConnection() as HttpURLConnection
+            connection.setDoInput(true)
+            connection.connect()
+            val input: InputStream = connection.getInputStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 
     companion object {
@@ -87,4 +119,6 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         const val TELL_NR_TXT = "tellNrTxt"
         const val RESERVE_URL = "reserve_url"
     }
+
+
 }

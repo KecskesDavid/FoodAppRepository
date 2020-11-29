@@ -61,22 +61,10 @@ class SplashScreen : AppCompatActivity() {
         })
 
 
-        //delay for the splasj screem
+        //delay for the splash screem
         Handler().postDelayed({
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         },3000)
     }
-
-    //todo:to make from url bitmap
-//    private fun toBitmap(url: String): Bitmap
-//    {
-//        val loading = ImageLoader(requireContext())
-//        val request = ImageRequest.Builder(requireContext())
-//                .data(url)
-//                .build()
-//
-//        val result = (loading.execute(request) as SuccessResult).drawable
-//        return (result as BitmapDrawable).bitmap
-//    }
 }

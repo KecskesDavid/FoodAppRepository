@@ -1,6 +1,8 @@
 package com.example.foodproject.fragments
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.ADRESS_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.IMAGE_VIEW
@@ -18,6 +21,12 @@ import com.example.foodproject.adapters.RestaurantAdapter.Companion.LNG_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.NAME_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.RESERVE_URL
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.TELL_NR_TXT
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class DetailsFragment : Fragment() {
 
@@ -30,7 +39,7 @@ class DetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_details, container, false)
 
         //Getting the data from the adapter
-        val image = requireArguments().get(IMAGE_VIEW)
+        val image = requireArguments().get(IMAGE_VIEW).toString()
         val name = requireArguments().get(NAME_TXT)
         val adress = requireArguments().get(ADRESS_TXT)
         val lat = requireArguments().get(LAT_TXT)
@@ -43,7 +52,10 @@ class DetailsFragment : Fragment() {
         val name_txt = view.findViewById<TextView>(R.id.name_Txt)
         val address_txt = view.findViewById<TextView>(R.id.address_txt)
         val tell_txt = view.findViewById<TextView>(R.id.tell_txt)
-        //image_view.text=image
+        GlobalScope.launch {
+            val bitmap = getBitmapFromURL(image) !!
+            (context as MainActivity).runOnUiThread { image_view.setImageBitmap(bitmap) }
+        }
         name_txt.text=name.toString()
         address_txt.text=adress.toString()
         tell_txt.text=tell.toString()
@@ -69,6 +81,21 @@ class DetailsFragment : Fragment() {
         }
 
         return view
+    }
+
+    fun getBitmapFromURL(src: String?): Bitmap? {
+        return try {
+            val url = URL(src)
+            val connection: HttpURLConnection = url
+                .openConnection() as HttpURLConnection
+            connection.setDoInput(true)
+            connection.connect()
+            val input: InputStream = connection.getInputStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 
 }

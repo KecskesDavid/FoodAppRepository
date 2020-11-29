@@ -56,6 +56,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation "com.android.support:support-annotations:23.1.1"
 
     //dependencies for layouts
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -90,7 +91,7 @@ dependencies {
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
-    //coil dependencie, for making bitmap from a url
+    //coil dependency, for making bitmap from a url
     implementation("io.coil-kt:coil:1.0.0")
 
     //recyclerview dependencies
@@ -100,5 +101,4 @@ dependencies {
     //cardview for recycler view element
     implementation "androidx.cardview:cardview:1.0.0"
 
-    implementation "com.android.support:support-annotations:23.1.1"
 }
