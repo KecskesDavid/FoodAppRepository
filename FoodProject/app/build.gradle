@@ -51,6 +51,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -98,4 +99,6 @@ dependencies {
 
     //cardview for recycler view element
     implementation "androidx.cardview:cardview:1.0.0"
+
+    implementation "com.android.support:support-annotations:23.1.1"
 }

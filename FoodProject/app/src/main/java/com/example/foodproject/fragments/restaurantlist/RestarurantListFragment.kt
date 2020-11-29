@@ -49,7 +49,7 @@ class RestarurantListFragment : Fragment() {
 
 
         //RecyclerView with the list of Restaurants
-        val adapter = RestaurantAdapter()
+        val adapter = RestaurantAdapter(requireContext())
         val recyclerViewRestaurant = view.restaurantRecView
         recyclerViewRestaurant.adapter=adapter
         recyclerViewRestaurant.layoutManager=LinearLayoutManager(requireContext())
