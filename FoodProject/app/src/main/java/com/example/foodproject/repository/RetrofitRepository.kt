@@ -9,7 +9,7 @@ import retrofit2.Response
 
 class RetrofitRepository {
 
-    suspend fun getRestaurant(): Response<Restaurant> = RetrofitInstance.api.getRestaurant()
+    suspend fun getRestaurant(id:Int): Response<Restaurant> = RetrofitInstance.api.getRestaurant(id)
 
     suspend fun getCountries(): Response<CountriesResponse> = RetrofitInstance.api.getCountries()
 

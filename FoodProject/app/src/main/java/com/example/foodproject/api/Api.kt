@@ -10,8 +10,10 @@ import retrofit2.http.Query
 
 interface Api {
 
-    @GET("/api/restaurants/107257")
-    suspend fun getRestaurant(): Response<Restaurant>
+    @GET("/api/restaurants")
+    suspend fun getRestaurant(
+            @Query("id") id : Int,
+    ): Response<Restaurant>
 
     @GET("/api/countries")
     suspend fun getCountries(): Response<CountriesResponse>

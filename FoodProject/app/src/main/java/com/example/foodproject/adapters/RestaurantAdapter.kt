@@ -21,6 +21,7 @@ import com.example.foodproject.data.FavoriteRestaurants
 import com.example.foodproject.fragments.DetailsFragment
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
+import com.example.foodproject.viewmodel.RestaurantViewModel
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
     private var list = emptyList<Restaurant>()
     private var mFavoriteRestaurants: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
+    private var mRestaurants: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java)
 
     class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.imageView
@@ -91,6 +93,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
             //todo add to favorites table
             mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,1))
+            mRestaurants.addRestaurant(currentItem)
         }
 
     }

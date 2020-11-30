@@ -93,7 +93,7 @@ class RestarurantListFragment : Fragment() {
             }
         }
 
-        //todo filter for cities
+        //filter for cities
         val filterCityBtn : Button = view.findViewById(R.id.filterCityBtn)
         filterCityBtn.setOnClickListener {
 
@@ -124,8 +124,6 @@ class RestarurantListFragment : Fragment() {
                 adapter.setData(restaurantsToShow)
             }
         }
-
-
 
         return view
     }

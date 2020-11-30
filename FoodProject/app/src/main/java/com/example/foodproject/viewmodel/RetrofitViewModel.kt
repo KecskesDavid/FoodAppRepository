@@ -18,9 +18,9 @@ class RetrofitViewModel(private val repository: RetrofitRepository): ViewModel()
     val myResponsCities: MutableLiveData<Response<CitiesResponse>> = MutableLiveData()
     val myResponsPage: MutableLiveData<Response<RestaurantListResponse>> = MutableLiveData()
 
-    fun getRestaurant(){
+    fun getRestaurant(id:Int){
         viewModelScope.launch {
-            val response = repository.getRestaurant()
+            val response = repository.getRestaurant(id)
             myRespons.value = response
         }
     }
