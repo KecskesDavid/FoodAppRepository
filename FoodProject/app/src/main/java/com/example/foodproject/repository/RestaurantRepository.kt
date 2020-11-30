@@ -1,8 +1,9 @@
 package com.example.foodproject.repository
 
 import androidx.lifecycle.LiveData
+import com.example.foodproject.data.FavoriteRestaurants
 import com.example.foodproject.data.RestaurantDao
-import com.example.foodproject.model.Restaurant
+import com.example.foodproject.data.Restaurant
 
 class RestaurantRepository(private val restaurantDao: RestaurantDao) {
 
@@ -11,5 +12,12 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
     suspend fun addRestaurant(restaurant: Restaurant)
     {
         restaurantDao.addRestaurant(restaurant)
+    }
+
+    val readAllFavoriteRestaurantsRestaurant: LiveData<List<FavoriteRestaurants>> = restaurantDao.readAllDataFromFavorites()
+
+    suspend fun addFavoriteRestaurants(favoriteRestaurants: FavoriteRestaurants)
+    {
+        restaurantDao.addFavoriteRestaurants(favoriteRestaurants)
     }
 }

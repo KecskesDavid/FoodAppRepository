@@ -1,4 +1,4 @@
-package com.example.foodproject.model
+package com.example.foodproject.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_restaurants")
 data class FavoriteRestaurants(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val restaurant_id: Int,
     val user_id: Int,

@@ -9,12 +9,11 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
-import com.example.foodproject.model.Restaurant
+import com.example.foodproject.data.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RestaurantViewModel

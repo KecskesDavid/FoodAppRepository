@@ -11,11 +11,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foodproject.MainActivity
 import com.example.foodproject.R
+import com.example.foodproject.data.FavoriteRestaurants
 import com.example.foodproject.fragments.DetailsFragment
-import com.example.foodproject.model.Restaurant
+import com.example.foodproject.data.Restaurant
+import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,6 +33,7 @@ import java.net.URL
 class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>(){
 
     private var list = emptyList<Restaurant>()
+    private var mFavoriteRestaurants: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
 
     class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.imageView
@@ -84,6 +90,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
 
             //todo add to favorites table
+            mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,1))
         }
 
     }

@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.foodproject.model.Restaurant
 
 @Dao
 interface RestaurantDao {
@@ -13,7 +12,12 @@ interface RestaurantDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addRestaurant(restaurant: Restaurant)
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun addFavoriteRestaurants(favoriteRestaurants: FavoriteRestaurants)
 
     @Query("select * from restaurants")
     fun readAllData(): LiveData<List<Restaurant>>
+
+    @Query("select * from favorite_restaurants")
+    fun readAllDataFromFavorites(): LiveData<List<FavoriteRestaurants>>
 }
