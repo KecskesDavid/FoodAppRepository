@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -22,10 +23,10 @@ import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorites.view.*
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
+import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 
 class FravoritesFragment : Fragment() {
 
-   // private lateinit var favoritesViewModel: FavoritesViewModel
     private lateinit var favoriteRests : FavoriteRestaurantsViewModel
     private lateinit var restaurantsViewModel: RestaurantViewModel
     private lateinit var viewModel: RetrofitViewModel
@@ -35,7 +36,6 @@ class FravoritesFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        //favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
 
         favoriteRests = ViewModelProvider(this).get(FavoriteRestaurantsViewModel::class.java)
@@ -52,7 +52,7 @@ class FravoritesFragment : Fragment() {
 
         val listOfRestaurants = restaurantsViewModel.readAllRestaurants
 
-        val elements = favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
+        favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
             val restaurantsToShow = arrayListOf<Restaurant>()
 
             response.forEach {
@@ -72,6 +72,8 @@ class FravoritesFragment : Fragment() {
             }
 
         })
+
+        //todo recycler view elements ui should be changed
 
         return view
     }

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Restaurant::class, FavoriteRestaurants::class], version = 2, exportSchema = false)
+@Database(entities = [Restaurant::class, FavoriteRestaurants::class, User::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun restaurantDao(): RestaurantDao
@@ -25,6 +25,13 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val migration_2_3: Migration = object: Migration(2,3)
+        {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER NOT NULL,`name` TEXT NOT NULL,`email` TEXT NOT NULL,`address` TEXT NOT NULL,`phone` TEXT NOT NULL,`password` TEXT NOT NULL,`photo` TEXT NOT NULL, PRIMARY KEY(`id`))")
+            }
+        }
+
         fun getDatabase(context: Context):AppDatabase{
             val tempInstance = INSTANCE
             if( tempInstance != null)
@@ -38,7 +45,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "Food_Database"
                 )
-                        .addMigrations(migration_1_2)
+                        .addMigrations(migration_1_2, migration_2_3)
                         .build()
                 INSTANCE = instance
                 return instance

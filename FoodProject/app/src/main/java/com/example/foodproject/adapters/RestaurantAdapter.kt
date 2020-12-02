@@ -1,5 +1,6 @@
 package com.example.foodproject.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -91,9 +92,21 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             holder.addToFav.setImageResource(R.drawable.ic_favorite)
             Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
 
-            //todo add to favorites table
             mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,1))
             mRestaurants.addRestaurant(currentItem)
+        }
+
+        //todo place it to fragment
+        holder.itemView.setOnLongClickListener{
+            val builder = AlertDialog.Builder(context)
+            builder.setPositiveButton("Yes"){_,_ ->
+                mFavoriteRestaurants.deleteRestaurant(currentItem)
+                Toast.makeText(context,"Succesfully deleted: "+currentItem.name,Toast.LENGTH_SHORT).show()
+            }
+            builder.setNegativeButton("No"){_,_->}
+            builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
+            builder.create().show()
+            return@setOnLongClickListener true
         }
 
     }

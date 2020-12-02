@@ -61,8 +61,9 @@ class SplashScreen : AppCompatActivity() {
         })
 
 
-        //delay for the splash screem
+        //delay for the splash screen
         Handler().postDelayed({
+            super.onPostResume()
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         },3000)

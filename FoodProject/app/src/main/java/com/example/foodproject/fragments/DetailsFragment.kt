@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.ADRESS_TXT
@@ -21,6 +23,7 @@ import com.example.foodproject.adapters.RestaurantAdapter.Companion.LNG_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.NAME_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.RESERVE_URL
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.TELL_NR_TXT
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException

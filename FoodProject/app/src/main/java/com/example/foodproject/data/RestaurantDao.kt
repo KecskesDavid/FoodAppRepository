@@ -1,10 +1,7 @@
 package com.example.foodproject.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface RestaurantDao {
@@ -20,4 +17,7 @@ interface RestaurantDao {
 
     @Query("select * from favorite_restaurants")
     fun readAllDataFromFavorites(): LiveData<List<FavoriteRestaurants>>
+
+    @Delete
+    suspend fun deleteRestaurant(restaurant: Restaurant)
 }

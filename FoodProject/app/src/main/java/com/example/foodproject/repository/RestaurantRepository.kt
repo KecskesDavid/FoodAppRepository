@@ -20,4 +20,9 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
     {
         restaurantDao.addFavoriteRestaurants(favoriteRestaurants)
     }
+
+    suspend fun deleteRestaurant(restaurant: Restaurant)
+    {
+        restaurantDao.deleteRestaurant(restaurant)
+    }
 }

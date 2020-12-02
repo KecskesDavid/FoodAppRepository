@@ -23,23 +23,21 @@ import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 
 class RestarurantListFragment : Fragment() {
 
-    private lateinit var restaurantListViewModel: RestaurantListViewModel
     private lateinit var restaurantViewModel: RestaurantViewModel
     private lateinit var viewModel: RetrofitViewModel
-
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        restaurantListViewModel =
-                ViewModelProvider(this).get(RestaurantListViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
 
         //Filling the spinner with the filters, countries, cities
         val spinnerState: Spinner = view.findViewById(R.id.countryFilter)
-        val myAdapterState = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.states) }
+        val myAdapterState = activity?.let {
+            ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.states)
+        }
         spinnerState.adapter = myAdapterState
 
         val spinnerCity: Spinner = view.findViewById(R.id.cityFilter)
