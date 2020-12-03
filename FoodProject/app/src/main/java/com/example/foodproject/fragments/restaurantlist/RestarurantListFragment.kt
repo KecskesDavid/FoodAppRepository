@@ -23,8 +23,8 @@ import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 
 class RestarurantListFragment : Fragment() {
 
-    private lateinit var restaurantViewModel: RestaurantViewModel
-    private lateinit var viewModel: RetrofitViewModel
+    private lateinit var restaurantViewModel: RestaurantViewModel //for database
+    private lateinit var viewModel: RetrofitViewModel //for retrofit
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -68,7 +68,7 @@ class RestarurantListFragment : Fragment() {
 
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            //todo get every restaurant not inly 5 pages
+            //todo get every restaurant not only 5 pages
             //viewModel.getRestaurantPage(state, 0)
             //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
 
@@ -100,7 +100,7 @@ class RestarurantListFragment : Fragment() {
 
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            //todo get every restaurant not inly 5 pages
+            //todo get every restaurant not only 5 pages
             //viewModel.getRestaurantPage(state, 0)
             //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
 

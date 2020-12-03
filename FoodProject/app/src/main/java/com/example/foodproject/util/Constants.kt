@@ -8,5 +8,12 @@ class Constants {
         const val BASE_URL="http://opentable.herokuapp.com"
         lateinit var states: ArrayList<String>
         lateinit var cities: ArrayList<String>
+        val PREFERENCES = "MyPrefs"
+        val nameSP = "nameKey"
+        val phoneSP = "phoneKey"
+        val emailSP = "emailKey"
+        val addressSP = "addressKey"
+        val idSP = "addressId"
+
     }
 }

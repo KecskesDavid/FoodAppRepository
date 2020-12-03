@@ -35,4 +35,13 @@ class FavoriteRestaurantsViewModel(application: Application): AndroidViewModel(a
         }
     }
 
+    fun deleteFavorites(favoriteRestaurants: FavoriteRestaurants)
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteFavorites(favoriteRestaurants)
+        }
+    }
+
+
+
 }

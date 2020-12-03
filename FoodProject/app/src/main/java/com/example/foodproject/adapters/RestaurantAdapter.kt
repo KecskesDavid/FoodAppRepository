@@ -12,18 +12,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.data.FavoriteRestaurants
 import com.example.foodproject.fragments.DetailsFragment
 import com.example.foodproject.data.Restaurant
+import com.example.foodproject.util.Constants
+import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -37,8 +39,10 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     private var list = emptyList<Restaurant>()
     private var mFavoriteRestaurants: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
     private var mRestaurants: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java)
+    private val sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
     class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+
         val imageView: ImageView = itemView.imageView
         val nameTxt: TextView = itemView.nameTxt
         val adressTxt: TextView = itemView.adressTxt
@@ -58,10 +62,10 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     override fun onBindViewHolder(holder: RestaurantAdapterHolder, position: Int) {
         val currentItem = list[position]
 
-        //not very effective
-        GlobalScope.launch {
-            val bitmap = getBitmapFromURL(currentItem.image_url) !!
-            (context as MainActivity).runOnUiThread { holder.imageView.setImageBitmap(bitmap) }
+       GlobalScope.launch(Dispatchers.Main) {
+           Glide.with(context)
+                   .load(currentItem.image_url)
+                   .into(holder.imageView)
         }
         holder.nameTxt.text=currentItem.name
         holder.tellNrTxt.text=currentItem.phone
@@ -92,7 +96,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             holder.addToFav.setImageResource(R.drawable.ic_favorite)
             Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
 
-            mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,1))
+            mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,sharedPreferences.getInt(idSP,0)))
             mRestaurants.addRestaurant(currentItem)
         }
 
@@ -100,8 +104,15 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         holder.itemView.setOnLongClickListener{
             val builder = AlertDialog.Builder(context)
             builder.setPositiveButton("Yes"){_,_ ->
-                mFavoriteRestaurants.deleteRestaurant(currentItem)
-                Toast.makeText(context,"Succesfully deleted: "+currentItem.name,Toast.LENGTH_SHORT).show()
+                //mFavoriteRestaurants.deleteRestaurant(currentItem)
+                mFavoriteRestaurants.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer {
+                    it.forEach {
+                        if (it.user_id == sharedPreferences.getInt(idSP, 0) && it.restaurant_id == currentItem.id) {
+                            mFavoriteRestaurants.deleteFavorites(it)
+                        }
+                    }
+                    Toast.makeText(context, "Succesfully deleted: " + currentItem.name, Toast.LENGTH_SHORT).show()
+                })
             }
             builder.setNegativeButton("No"){_,_->}
             builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
@@ -118,23 +129,8 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         notifyDataSetChanged()
     }
 
-    fun getBitmapFromURL(src: String?): Bitmap? {
-        return try {
-            val url = URL(src)
-            val connection: HttpURLConnection = url
-                    .openConnection() as HttpURLConnection
-            connection.setDoInput(true)
-            connection.connect()
-            val input: InputStream = connection.getInputStream()
-            BitmapFactory.decodeStream(input)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
-        }
-    }
-
     companion object {
-        const val IMAGE_VIEW = "ImageView"
+        const val IMAGE_VIEW = "imageView"
         const val NAME_TXT = "nameTxt"
         const val ADRESS_TXT = "adressTxt"
         const val LNG_TXT = "lngTxt"

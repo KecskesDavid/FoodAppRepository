@@ -1,5 +1,6 @@
 package com.example.foodproject.fragments.favorites
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,8 @@ import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
+import com.example.foodproject.util.Constants
+import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
@@ -40,6 +43,7 @@ class FravoritesFragment : Fragment() {
 
         favoriteRests = ViewModelProvider(this).get(FavoriteRestaurantsViewModel::class.java)
         restaurantsViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
+        val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
@@ -55,20 +59,24 @@ class FravoritesFragment : Fragment() {
         favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            response.forEach {
+            val user_id = sharedPreferences?.getInt(idSP,0)
 
-                listOfRestaurants.observe(viewLifecycleOwner,Observer{ restaurant ->
-                    for(i in restaurant)
-                    {
-                        if(it.restaurant_id == i.id)
+            if(user_id!=0){
+                response.forEach {
+
+                    listOfRestaurants.observe(viewLifecycleOwner,Observer{ restaurant ->
+                        for(i in restaurant )
                         {
-                            restaurantsToShow.add(i)
-                            adapter.setData(restaurantsToShow)
-                            break
+                            if(it.restaurant_id == i.id && it.user_id == user_id)
+                            {
+                                restaurantsToShow.add(i)
+                                adapter.setData(restaurantsToShow)
+                                break
+                            }
                         }
-                    }
-                })
+                    })
 
+                }
             }
 
         })
