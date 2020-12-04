@@ -13,7 +13,9 @@ class Constants {
         val phoneSP = "phoneKey"
         val emailSP = "emailKey"
         val addressSP = "addressKey"
-        val idSP = "addressId"
+        val jobSP = "jobKey"
+        val idSP = "idKey"
+        val passSP = "passKey"
 
     }
 }

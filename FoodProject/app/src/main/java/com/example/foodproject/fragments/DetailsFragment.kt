@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.ADRESS_TXT
@@ -24,6 +25,7 @@ import com.example.foodproject.adapters.RestaurantAdapter.Companion.NAME_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.RESERVE_URL
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.TELL_NR_TXT
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -55,9 +57,10 @@ class DetailsFragment : Fragment() {
         val name_txt = view.findViewById<TextView>(R.id.name_Txt)
         val address_txt = view.findViewById<TextView>(R.id.address_txt)
         val tell_txt = view.findViewById<TextView>(R.id.tell_txt)
-        GlobalScope.launch {
-            val bitmap = getBitmapFromURL(image) !!
-            (context as MainActivity).runOnUiThread { image_view.setImageBitmap(bitmap) }
+        GlobalScope.launch(Dispatchers.Main) {
+            Glide.with(requireContext())
+                    .load(image)
+                    .into(image_view)
         }
         name_txt.text=name.toString()
         address_txt.text=adress.toString()

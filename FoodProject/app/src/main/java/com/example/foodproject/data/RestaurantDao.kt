@@ -15,6 +15,9 @@ interface RestaurantDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addUser(user: User)
 
+    @Update
+    suspend fun updateUser(user: User)
+
     @Query("select * from restaurants")
     fun readAllData(): LiveData<List<Restaurant>>
 

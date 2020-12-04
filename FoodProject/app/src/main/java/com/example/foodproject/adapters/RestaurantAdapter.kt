@@ -28,26 +28,42 @@ import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
-
 
 class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>(){
 
     private var list = emptyList<Restaurant>()
     private var mFavoriteRestaurants: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
     private var mRestaurants: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java)
+    private var mFavoritesRestaurantsViewModel: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
     private val sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
-    class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    companion object {
+        const val IMAGE_VIEW = "imageView"
+        const val NAME_TXT = "nameTxt"
+        const val ADRESS_TXT = "adressTxt"
+        const val LNG_TXT = "lngTxt"
+        const val LAT_TXT = "latTxt"
+        const val TELL_NR_TXT = "tellNrTxt"
+        const val RESERVE_URL = "reserve_url"
+    }
+
+    class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
         val imageView: ImageView = itemView.imageView
         val nameTxt: TextView = itemView.nameTxt
         val adressTxt: TextView = itemView.adressTxt
         val tellNrTxt: TextView = itemView.telNumberTxt
         val addToFav: ImageView = itemView.addToFav
+
+        init{
+            itemView.setOnClickListener (this)
+        }
+
+        override fun onClick(v: View?) {
+            val pos = adapterPosition
+
+            Toast.makeText(v?.context,pos.toString(),Toast.LENGTH_SHORT).show()
+        }
 
     }
 
@@ -62,7 +78,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     override fun onBindViewHolder(holder: RestaurantAdapterHolder, position: Int) {
         val currentItem = list[position]
 
-       GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main) {
            Glide.with(context)
                    .load(currentItem.image_url)
                    .into(holder.imageView)
@@ -70,6 +86,21 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         holder.nameTxt.text=currentItem.name
         holder.tellNrTxt.text=currentItem.phone
         holder.adressTxt.text=currentItem.address
+
+        mFavoritesRestaurantsViewModel.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer { resp ->
+
+            resp.forEach {
+                if(it.user_id == sharedPreferences?.getInt(idSP,0))
+                {
+                    if( currentItem.id == it.restaurant_id)
+                    {
+                        holder.addToFav.setImageResource(R.drawable.ic_favorite)
+                    }
+                }
+            }
+
+        })
+
 
         holder.itemView.setOnClickListener {
 
@@ -86,6 +117,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             val detailsFragment = DetailsFragment()
             detailsFragment.arguments = bundle
 
+            //todo try navigation
             val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
             transaction.replace(R.id.nav_host_fragment, detailsFragment)
             transaction.addToBackStack(null);
@@ -100,7 +132,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             mRestaurants.addRestaurant(currentItem)
         }
 
-        //todo place it to fragment
+        //delegate it
         holder.itemView.setOnLongClickListener{
             val builder = AlertDialog.Builder(context)
             builder.setPositiveButton("Yes"){_,_ ->
@@ -128,16 +160,5 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         this.list = restaurant
         notifyDataSetChanged()
     }
-
-    companion object {
-        const val IMAGE_VIEW = "imageView"
-        const val NAME_TXT = "nameTxt"
-        const val ADRESS_TXT = "adressTxt"
-        const val LNG_TXT = "lngTxt"
-        const val LAT_TXT = "latTxt"
-        const val TELL_NR_TXT = "tellNrTxt"
-        const val RESERVE_URL = "reserve_url"
-    }
-
 
 }

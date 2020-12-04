@@ -10,6 +10,7 @@ data class User (
     val name: String,
     val email: String,
     val address: String,
+    val job: String,
     val phone: String,
     val password: String,
     val photo: String

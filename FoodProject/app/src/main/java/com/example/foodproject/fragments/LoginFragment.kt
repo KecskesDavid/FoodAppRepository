@@ -47,6 +47,8 @@ class LoginFragment : Fragment() {
                             putString(Constants.addressSP,it.address)
                             putString(Constants.emailSP,it.email)
                             putString(Constants.phoneSP,it.phone)
+                            putString(Constants.jobSP,it.job)
+                            putString(Constants.passSP,it.password)
                             putInt(Constants.idSP,it.id)
                             apply()
                         }

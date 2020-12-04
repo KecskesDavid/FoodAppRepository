@@ -81,8 +81,6 @@ class FravoritesFragment : Fragment() {
 
         })
 
-        //todo recycler view elements ui should be changed
-
         return view
     }
 }

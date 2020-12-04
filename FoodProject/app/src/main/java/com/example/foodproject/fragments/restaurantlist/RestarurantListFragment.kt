@@ -1,5 +1,6 @@
 package com.example.foodproject.fragments.restaurantlist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodproject.R
@@ -16,12 +18,14 @@ import com.example.foodproject.adapters.RestaurantAdapter
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
+import com.example.foodproject.util.Constants.Companion.idSP
+import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 
-class RestarurantListFragment : Fragment() {
+class RestarurantListFragment : Fragment(){
 
     private lateinit var restaurantViewModel: RestaurantViewModel //for database
     private lateinit var viewModel: RetrofitViewModel //for retrofit
@@ -77,9 +81,9 @@ class RestarurantListFragment : Fragment() {
                 //todo: syncronization problem
                 viewModel.getRestaurantCountriesPage(state, i)
 
-                viewModel.myResponsPage.value?.body()?.restaurants?.forEach{
-                    restaurantsToShow.add(it)
-                }
+                viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
+                    response.body()?.restaurants?.forEach { restaurantsToShow.add(it) }
+                })
 
             }
 
@@ -100,25 +104,22 @@ class RestarurantListFragment : Fragment() {
 
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            //todo get every restaurant not only 5 pages
-            //viewModel.getRestaurantPage(state, 0)
-            //val numOfRestaurantsviewModel = viewModel.myResponsPage.value?.body()?.total_entries?.div(25) !!
-
            // for( i in 1..3 ) {
 
                 //todo: syncronization problem
                 viewModel.getRestaurantCitiesPage(city, 1)
 
-                viewModel.myResponsPage.value?.body()?.restaurants?.forEach{
-                    restaurantsToShow.add(it)
-                }
+                viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
+                    response.body()?.restaurants?.forEach { restaurantsToShow.add(it) }
+                })
 
-           // }
+
+            // }
 
             if(restaurantsToShow.size == 0) {
                 Toast.makeText(context,"There is no restaurants in this city!",Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
                 adapter.setData(restaurantsToShow)
             }
         }

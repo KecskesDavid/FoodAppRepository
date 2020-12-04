@@ -41,5 +41,10 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
         restaurantDao.addUser(user)
     }
 
+    suspend fun updateUser(user: User)
+    {
+        restaurantDao.updateUser(user)
+    }
+
 
 }

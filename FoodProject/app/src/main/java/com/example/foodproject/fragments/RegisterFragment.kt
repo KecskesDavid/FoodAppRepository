@@ -20,7 +20,10 @@ import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.PREFERENCES
 import com.example.foodproject.util.Constants.Companion.addressSP
 import com.example.foodproject.util.Constants.Companion.emailSP
+import com.example.foodproject.util.Constants.Companion.idSP
+import com.example.foodproject.util.Constants.Companion.jobSP
 import com.example.foodproject.util.Constants.Companion.nameSP
+import com.example.foodproject.util.Constants.Companion.passSP
 import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.viewmodel.UserViewModel
 
@@ -44,17 +47,18 @@ class RegisterFragment : Fragment() {
         val name = view.findViewById<EditText>(R.id.editTextPersonName)
         val email = view.findViewById<EditText>(R.id.editTextEmail)
         val address = view.findViewById<EditText>(R.id.editTextAddress)
+        val job = view.findViewById<EditText>(R.id.editTextJob)
         val pass1 = view.findViewById<EditText>(R.id.editTextPassword)
         val pass2 = view.findViewById<EditText>(R.id.editTextPassword2)
         val phone = view.findViewById<EditText>(R.id.editTextPhone)
 
         register_Btn.setOnClickListener{
 
-            if( checkInput(name,email,address,pass1,pass2,phone) ){
+            if( checkInput(name,email,address,pass1,pass2,phone,job) ){
 
                 UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { user ->
 
-                    var bool:Boolean = true
+                    var bool = true
                     user.forEach {
                         if(it.email.equals(email.text.toString()))
                         {
@@ -67,8 +71,8 @@ class RegisterFragment : Fragment() {
                     {
                         Toast.makeText(context,"User added",Toast.LENGTH_SHORT).show()
 
-                        UserViewModel.addUser(User(0,name.text.toString(),email.text.toString(),address.text.toString(),phone.text.toString(),pass1.text.toString(),""))
-                        //todo try without foreach -> new query
+                        UserViewModel.addUser(User(0,name.text.toString(),email.text.toString(),address.text.toString(),job.text.toString(),phone.text.toString(),pass1.text.toString(),""))
+
                         UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { restaurant ->
 
                             restaurant.forEach {
@@ -79,7 +83,9 @@ class RegisterFragment : Fragment() {
                                         putString(addressSP,address.text.toString())
                                         putString(emailSP,email.text.toString())
                                         putString(phoneSP,phone.text.toString())
-                                        putInt(Constants.idSP,it.id)
+                                        putString(jobSP,job.text.toString())
+                                        putString(passSP,pass1.text.toString())
+                                        putInt(idSP,it.id)
                                         apply()
                                     }
 
@@ -100,7 +106,7 @@ class RegisterFragment : Fragment() {
         return view
     }
 
-    fun checkInput( name: EditText,  email: EditText,  address: EditText,  pass1: EditText,  pass2: EditText,  phone: EditText): Boolean
+    fun checkInput( name: EditText,  email: EditText,  address: EditText,  pass1: EditText,  pass2: EditText,  phone: EditText, job: EditText): Boolean
     {
         var bool: Boolean = true
         //if any of this are empty then set an error message
@@ -117,6 +123,11 @@ class RegisterFragment : Fragment() {
         if(address.text.isEmpty())
         {
             address.setError("Empty field!")
+            bool = false
+        }
+        if(job.text.isEmpty())
+        {
+            job.setError("Empty field!")
             bool = false
         }
         if(pass1.text.isEmpty())
