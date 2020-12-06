@@ -16,6 +16,7 @@ class Constants {
         val jobSP = "jobKey"
         val idSP = "idKey"
         val passSP = "passKey"
+        val photoSP = "photoKey"
 
     }
 }

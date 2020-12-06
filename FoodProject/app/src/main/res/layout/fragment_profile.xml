@@ -40,6 +40,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
+        <ImageView
+            android:id="@+id/change_Password_Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_change_user_info"
+            app:layout_constraintBottom_toBottomOf="@+id/nameTxt"
+            app:layout_constraintStart_toEndOf="@+id/nameTxt"
+            app:layout_constraintTop_toTopOf="@+id/nameTxt"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -143,8 +154,9 @@
 
     <Button
         android:id="@+id/to_Login_Btn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,8 +166,9 @@
 
     <Button
         android:id="@+id/to_Register_Btn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/to_Login_Btn"
@@ -165,13 +178,17 @@
 
     <Button
         android:id="@+id/logout_Btn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:text="Logout"
+        android:background="@drawable/custom_button"
         android:visibility="gone"
+        android:text="Logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressTxt" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

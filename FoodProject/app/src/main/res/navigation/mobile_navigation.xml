@@ -31,10 +31,13 @@
         <action
             android:id="@+id/action_navigation_profile_self"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_navigation_profile_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.foodproject.fragments.LoginFragment"
+        android:name="com.example.foodproject.fragments.profile.LoginFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_login" >
         <action
@@ -43,11 +46,20 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.foodproject.fragments.RegisterFragment"
+        android:name="com.example.foodproject.fragments.profile.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.foodproject.fragments.profile.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" >
+        <action
+            android:id="@+id/action_changePasswordFragment_to_navigation_profile"
             app:destination="@id/navigation_profile" />
     </fragment>
 

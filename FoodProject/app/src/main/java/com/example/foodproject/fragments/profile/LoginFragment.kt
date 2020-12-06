@@ -1,4 +1,4 @@
-package com.example.foodproject.fragments
+package com.example.foodproject.fragments.profile
 
 import android.content.Context
 import android.os.Bundle
@@ -7,14 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.foodproject.R
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.PREFERENCES
+import com.example.foodproject.util.Constants.Companion.addressSP
+import com.example.foodproject.util.Constants.Companion.emailSP
+import com.example.foodproject.util.Constants.Companion.idSP
+import com.example.foodproject.util.Constants.Companion.jobSP
+import com.example.foodproject.util.Constants.Companion.nameSP
+import com.example.foodproject.util.Constants.Companion.passSP
+import com.example.foodproject.util.Constants.Companion.phoneSP
+import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
+import com.google.android.material.textfield.TextInputLayout
 
 class LoginFragment : Fragment() {
 
@@ -30,26 +38,27 @@ class LoginFragment : Fragment() {
         val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         val login_Btn = view.findViewById<Button>(R.id.login_Btn)
-        val email = view.findViewById<EditText>(R.id.email_Text_View)
-        val pass = view.findViewById<EditText>(R.id.pass_Text_view)
+        val email = view.findViewById<TextInputLayout>(R.id.email_Text_View)
+        val pass = view.findViewById<TextInputLayout>(R.id.pass_Text_view)
 
         login_Btn.setOnClickListener{
 
             UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { restaurant ->
 
                 var boolPass = false
-                restaurant.forEach { if( email.text.toString().equals(it.email) )
+                restaurant.forEach { if( email.editText?.text.toString().equals(it.email) )
                 {
-                    if( pass.text.toString().equals(it.password) )
+                    if( pass.editText?.text.toString().equals(it.password) )
                     {
                         with (sharedPreferences!!.edit()) {
-                            putString(Constants.nameSP,it.name)
-                            putString(Constants.addressSP,it.address)
-                            putString(Constants.emailSP,it.email)
-                            putString(Constants.phoneSP,it.phone)
-                            putString(Constants.jobSP,it.job)
-                            putString(Constants.passSP,it.password)
-                            putInt(Constants.idSP,it.id)
+                            putString(nameSP,it.name)
+                            putString(addressSP,it.address)
+                            putString(emailSP,it.email)
+                            putString(phoneSP,it.phone)
+                            putString(jobSP,it.job)
+                            putString(passSP,it.password)
+                            putString(photoSP,it.photo)
+                            putInt(idSP,it.id)
                             apply()
                         }
 

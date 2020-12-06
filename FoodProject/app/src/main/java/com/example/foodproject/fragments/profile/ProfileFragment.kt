@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.checkSelfPermission
 
 import androidx.fragment.app.Fragment
@@ -29,12 +31,14 @@ import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.util.Constants.Companion.jobSP
 import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.util.Constants.Companion.phoneSP
+import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 import java.util.jar.Manifest
 
 class ProfileFragment : Fragment() {
 
+    var imageUri : String = ""
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -48,6 +52,7 @@ class ProfileFragment : Fragment() {
         val login_btn = view.findViewById<Button>(R.id.to_Login_Btn)
         val register_btn = view.findViewById<Button>(R.id.to_Register_Btn)
         val logout_btn = view.findViewById<Button>(R.id.logout_Btn)
+        val change_pass_btn = view.findViewById<ImageView>(R.id.change_Password_Btn)
         val nav = findNavController()
 
         val isActiveUser = sharedPreferences?.getString(nameSP, "")
@@ -56,6 +61,7 @@ class ProfileFragment : Fragment() {
             login_btn.visibility = View.GONE
             register_btn.visibility = View.GONE
             logout_btn.visibility = View.VISIBLE
+            change_pass_btn.visibility = View.VISIBLE
 
             val name = view.findViewById<TextView>(R.id.nameTxt)
             val address = view.findViewById<TextView>(R.id.addressTxt)
@@ -63,15 +69,27 @@ class ProfileFragment : Fragment() {
             val email = view.findViewById<TextView>(R.id.emailTxt)
             val job = view.findViewById<TextView>(R.id.jobTxt)
 
+            if(sharedPreferences?.getString(photoSP,"") != ""){
+                Glide.with(requireContext())
+                    .load(sharedPreferences?.getString(photoSP,""))
+                    .into(profile_image)
+            }
             name.text = sharedPreferences?.getString(nameSP, "")
             address.text = sharedPreferences?.getString(addressSP, "")
             phone.text = sharedPreferences?.getString(phoneSP, "")
             email.text = sharedPreferences?.getString(emailSP, "")
             job.text = sharedPreferences?.getString(jobSP, "")
+
+            profile_image.setOnClickListener {
+                selectImageFromGallery()
+            }
         }
 
-        profile_image.setOnClickListener {
-            selectImageFromGallery()
+        if(imageUri != "")
+        {
+            Glide.with(requireContext())
+                .load(imageUri)
+                .into(profile_image)
         }
 
         login_btn.setOnClickListener {
@@ -82,17 +100,53 @@ class ProfileFragment : Fragment() {
             nav.navigate(R.id.action_navigation_profile_to_registerFragment)
         }
 
+        change_pass_btn.setOnClickListener {
+            nav.navigate(R.id.action_navigation_profile_to_changePasswordFragment)
+        }
+
         logout_btn.setOnClickListener {
-            with(sharedPreferences!!.edit()) {
-                remove(nameSP)
-                remove(addressSP)
-                remove(emailSP)
-                remove(phoneSP)
-                remove(jobSP)
-                remove(idSP)
-                nav.navigate(R.id.navigation_profile)
-                apply()
+            if(imageUri!="")
+            {
+                UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
+
+                    users.forEach { user ->
+
+                        if(user.email == sharedPreferences?.getString(emailSP,""))
+                        {
+                            val new_user = User(user.id,user.name,user.email,user.address,user.job,user.phone,user.password,imageUri)
+
+                            UserViewModel.updateUser(new_user)
+
+                            Toast.makeText(context,"asd",Toast.LENGTH_SHORT).show()
+
+                            with(sharedPreferences!!.edit()) {
+                                remove(nameSP)
+                                remove(addressSP)
+                                remove(emailSP)
+                                remove(phoneSP)
+                                remove(jobSP)
+                                remove(idSP)
+                                nav.navigate(R.id.navigation_profile)
+                                apply()
+                            }
+                        }
+
+                    }
+                })
             }
+            else{
+                with(sharedPreferences!!.edit()) {
+                    remove(nameSP)
+                    remove(addressSP)
+                    remove(emailSP)
+                    remove(phoneSP)
+                    remove(jobSP)
+                    remove(idSP)
+                    nav.navigate(R.id.navigation_profile)
+                    apply()
+                }
+            }
+
         }
 
         return view
@@ -136,7 +190,7 @@ class ProfileFragment : Fragment() {
             Glide.with(requireContext())
                     .load(data?.data)
                     .into(profile_image)
-
+            imageUri=data?.data.toString()
         }
     }
 
