@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodproject.data.AppDatabase
 import com.example.foodproject.repository.RestaurantRepository
 import com.example.foodproject.data.Restaurant
+import com.example.foodproject.data.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,13 @@ class RestaurantViewModel (application: Application): AndroidViewModel(applicati
     {
         viewModelScope.launch(Dispatchers.IO){
             repository.addRestaurant(restaurant)
+        }
+    }
+
+    fun updateRestaurant(restaurant: Restaurant)
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateRestaurant(restaurant)
         }
     }
 }

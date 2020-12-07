@@ -21,6 +21,11 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
         restaurantDao.deleteRestaurant(restaurant)
     }
 
+    suspend fun updateRestaurant(restaurant: Restaurant)
+    {
+        restaurantDao.updateRestaurant(restaurant)
+    }
+
 
 
     val readAllUser: LiveData<List<User>> = restaurantDao.readAllDataFromUser()

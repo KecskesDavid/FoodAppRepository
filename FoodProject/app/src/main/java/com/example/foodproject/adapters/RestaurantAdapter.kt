@@ -1,10 +1,7 @@
 package com.example.foodproject.adapters
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +12,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
-import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.data.FavoriteRestaurants
-import com.example.foodproject.fragments.DetailsFragment
+import com.example.foodproject.fragments.details.DetailsFragment
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.idSP
@@ -45,6 +40,8 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         const val IMAGE_VIEW = "imageView"
         const val NAME_TXT = "nameTxt"
         const val ADRESS_TXT = "adressTxt"
+        const val STATE_TXT = "state"
+        const val CITY_TXT = "city"
         const val PRICE_TXT = "priceTxt"
         const val LNG_TXT = "lngTxt"
         const val LAT_TXT = "latTxt"
@@ -52,24 +49,14 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         const val RESERVE_URL = "reserve_url"
     }
 
-    class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
+    class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
         val imageView: ImageView = itemView.imageView
         val nameTxt: TextView = itemView.nameTxt
         val adressTxt: TextView = itemView.adressTxt
         val tellNrTxt: TextView = itemView.telNumberTxt
         val addToFav: ImageView = itemView.addToFav
-
-        init{
-            itemView.setOnClickListener (this)
-        }
-
-        override fun onClick(v: View?) {
-            val pos = adapterPosition
-
-            Toast.makeText(v?.context,pos.toString(),Toast.LENGTH_SHORT).show()
-        }
-
+        val remove: ImageView = itemView.removeBtn
     }
 
     //only once called
@@ -84,10 +71,10 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         val isActive = sharedPreferences.getString(nameSP,"")
         val currentItem = list[position]
 
-        if (isActive?.isEmpty() == true) {
-            holder.addToFav.visibility = View.GONE
+        if (isActive?.isEmpty() == false) {
+            holder.addToFav.visibility = View.VISIBLE
 
-            holder.itemView.setOnLongClickListener{
+            holder.remove.setOnClickListener{
                 val builder = AlertDialog.Builder(context)
                 builder.setPositiveButton("Yes"){_,_ ->
                     //mFavoriteRestaurants.deleteRestaurant(currentItem)
@@ -103,8 +90,17 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
                 builder.setNegativeButton("No"){_,_->}
                 builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
                 builder.create().show()
-                return@setOnLongClickListener true
+
+                return@setOnClickListener
             }
+
+            holder.imageView.setOnClickListener{
+                //todo
+            }
+        }
+        else
+        {
+            holder.addToFav.visibility = View.GONE
         }
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -125,6 +121,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
                     {
                         if( currentItem.id == it.restaurant_id)
                         {
+                            holder.remove.visibility = View.VISIBLE
                             holder.addToFav.setImageResource(R.drawable.ic_favorite)
                         }
                     }
@@ -145,13 +142,14 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             bundle.putString(LAT_TXT, currentItem.lat.toString())
             bundle.putString(LNG_TXT, currentItem.lng.toString())
             bundle.putString(TELL_NR_TXT, currentItem.phone)
+            bundle.putString(CITY_TXT, currentItem.city)
+            bundle.putString(STATE_TXT, currentItem.state)
             bundle.putString(RESERVE_URL, currentItem.reserve_url)
             bundle.putString(PRICE_TXT, currentItem.price.toString())
 
             val detailsFragment = DetailsFragment()
             detailsFragment.arguments = bundle
 
-            //todo try navigation
             val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
             transaction.replace(R.id.nav_host_fragment, detailsFragment)
             transaction.addToBackStack(null);

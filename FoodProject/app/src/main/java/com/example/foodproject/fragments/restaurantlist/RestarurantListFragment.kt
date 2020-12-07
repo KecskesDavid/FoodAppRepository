@@ -17,10 +17,13 @@ import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 
 class RestarurantListFragment : Fragment(){
-
+    //todo try so solve pages with spinner
+    //todo try test everything
+    //todo make beautiful code
     private lateinit var restaurantViewModel: RestaurantViewModel //for database
     private lateinit var viewModel: RetrofitViewModel //for retrofit
 
@@ -30,6 +33,8 @@ class RestarurantListFragment : Fragment(){
             savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
+
+        setUpBottomNav()
 
         //Filling up spinner with cities
         val spinnerCity: Spinner = view.findViewById(R.id.cityFilter)
@@ -105,5 +110,10 @@ class RestarurantListFragment : Fragment(){
 
 
         return view
+    }
+
+    private fun setUpBottomNav() {
+        val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        navbar?.visibility = View.VISIBLE
     }
 }

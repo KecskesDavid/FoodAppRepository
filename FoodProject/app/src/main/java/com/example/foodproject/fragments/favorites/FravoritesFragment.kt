@@ -24,6 +24,7 @@ import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_favorites.view.*
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
@@ -44,6 +45,8 @@ class FravoritesFragment : Fragment() {
         favoriteRests = ViewModelProvider(this).get(FavoriteRestaurantsViewModel::class.java)
         restaurantsViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
+
+        setUpBottomNav()
 
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
@@ -82,5 +85,10 @@ class FravoritesFragment : Fragment() {
         })
 
         return view
+    }
+
+    private fun setUpBottomNav() {
+        val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        navbar?.visibility = View.VISIBLE
     }
 }

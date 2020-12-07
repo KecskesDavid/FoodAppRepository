@@ -1,41 +1,31 @@
-package com.example.foodproject.fragments
+package com.example.foodproject.fragments.details
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.foodproject.MainActivity
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.ADRESS_TXT
+import com.example.foodproject.adapters.RestaurantAdapter.Companion.CITY_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.IMAGE_VIEW
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.LAT_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.LNG_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.NAME_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.PRICE_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.RESERVE_URL
+import com.example.foodproject.adapters.RestaurantAdapter.Companion.STATE_TXT
 import com.example.foodproject.adapters.RestaurantAdapter.Companion.TELL_NR_TXT
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 class DetailsFragment : Fragment() {
 
@@ -43,9 +33,13 @@ class DetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_details, container, false)
+
+        val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        navbar?.visibility = View.GONE
 
         //Getting the data from the adapter
         val image = requireArguments().get(IMAGE_VIEW).toString()
@@ -55,10 +49,13 @@ class DetailsFragment : Fragment() {
         val lat = requireArguments().get(LAT_TXT)
         val lng = requireArguments().get(LNG_TXT)
         val tell = requireArguments().get(TELL_NR_TXT)
+        val city = requireArguments().get(STATE_TXT)
+        val state = requireArguments().get(CITY_TXT)
         var reserve_url = requireArguments().get(RESERVE_URL).toString()
 
         //Binding the data with the ui elements
         val image_view = view.findViewById<ImageView>(R.id.profile_ImgView)
+        val statecity_txt = view.findViewById<TextView>(R.id.statecity)
         val name_txt = view.findViewById<TextView>(R.id.name_Txt)
         val address_txt = view.findViewById<TextView>(R.id.address_txt)
         val tell_txt = view.findViewById<TextView>(R.id.tell_txt)
@@ -72,10 +69,17 @@ class DetailsFragment : Fragment() {
         address_txt.text=adress.toString()
         tell_txt.text=tell.toString()
         price_txt.text=price.toString()
+        statecity_txt.text=city.toString()+", "+state.toString()
 
         //Setting up buttons for map and for searching the restaurant on the internet
-        val url_Btn = view.findViewById<Button>(R.id.url_Btn)
-        val gps_Btn = view.findViewById<Button>(R.id.gps_Btn)
+        val url_Btn = view.findViewById<ImageView>(R.id.url_Btn)
+        val gps_Btn = view.findViewById<ImageView>(R.id.gps_Btn)
+
+        tell_txt.setOnClickListener{
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$tell")
+            startActivity(intent)
+        }
 
         gps_Btn.setOnClickListener {
             val gmmIntentUri = Uri.parse("geo:$lat,$lng")
