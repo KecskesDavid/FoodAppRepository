@@ -9,6 +9,7 @@ import com.example.foodproject.data.User
 import com.example.foodproject.repository.RestaurantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
@@ -34,5 +35,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             repository.updateUser(user)
         }
     }
+
+    suspend fun readUserByEmail(email: String): LiveData<User> = withContext(viewModelScope.coroutineContext) { repository.readUserByEmail(email) }
 
 }

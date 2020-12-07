@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.runBlocking
 
 class LoginFragment : Fragment() {
 
@@ -42,6 +44,41 @@ class LoginFragment : Fragment() {
         val pass = view.findViewById<TextInputLayout>(R.id.pass_Text_view)
 
         login_Btn.setOnClickListener{
+//            val user = runBlocking{ UserViewModel.readUserByEmail(email.editText?.text.toString()) }
+//
+//            user.observe(viewLifecycleOwner, Observer {
+//                if(!it.email.isEmpty())
+//                {
+//
+//                    if( pass.editText?.text.toString().equals(it.password) )
+//                    {
+//                        with (sharedPreferences!!.edit()) {
+//                            putString(nameSP,it.name)
+//                            putString(addressSP,it.address)
+//                            putString(emailSP,it.email)
+//                            putString(phoneSP,it.phone)
+//                            putString(jobSP,it.job)
+//                            putString(passSP,it.password)
+//                            putString(photoSP,it.photo)
+//                            putInt(idSP,it.id)
+//                            apply()
+//                        }
+//
+//                        val nav = findNavController()
+//                        nav.navigate(R.id.action_loginFragment_to_navigation_profile)
+//                    }
+//
+//                    pass.setError("Wrong password!")
+//
+//                }
+//                else
+//                {
+//                    email.setError("Wrong email address!")
+//                }
+//
+//
+//
+//            })
 
             UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { restaurant ->
 
@@ -65,7 +102,9 @@ class LoginFragment : Fragment() {
                         val nav = findNavController()
                         nav.navigate(R.id.action_loginFragment_to_navigation_profile)
                     }
-                    boolPass = true
+                    else{
+                        boolPass = true
+                    }
                 }}
 
                 if( boolPass )
@@ -79,7 +118,6 @@ class LoginFragment : Fragment() {
             })
 
         }
-
 
         return view
     }

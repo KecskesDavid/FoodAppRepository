@@ -5,6 +5,7 @@ import com.example.foodproject.data.FavoriteRestaurants
 import com.example.foodproject.data.RestaurantDao
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.data.User
+import kotlinx.coroutines.withContext
 
 class RestaurantRepository(private val restaurantDao: RestaurantDao) {
 
@@ -14,6 +15,32 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
     {
         restaurantDao.addRestaurant(restaurant)
     }
+
+    suspend fun deleteRestaurant(restaurant: Restaurant)
+    {
+        restaurantDao.deleteRestaurant(restaurant)
+    }
+
+
+
+    val readAllUser: LiveData<List<User>> = restaurantDao.readAllDataFromUser()
+
+    suspend fun addUser(user: User)
+    {
+        restaurantDao.addUser(user)
+    }
+
+    suspend fun updateUser(user: User)
+    {
+        restaurantDao.updateUser(user)
+    }
+
+    suspend fun readUserByEmail(email: String) = restaurantDao.readUserByEmail(email)
+
+    suspend fun checkExists(email: String) = restaurantDao.checkExists(email)
+
+
+
 
     val readAllFavoriteRestaurantsRestaurant: LiveData<List<FavoriteRestaurants>> = restaurantDao.readAllDataFromFavorites()
 
@@ -29,22 +56,6 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
         restaurantDao.deleteFavorites(favoriteRestaurants)
     }
 
-    suspend fun deleteRestaurant(restaurant: Restaurant)
-    {
-        restaurantDao.deleteRestaurant(restaurant)
-    }
-
-    val readAllUser: LiveData<List<User>> = restaurantDao.readAllDataFromUser()
-
-    suspend fun addUser(user: User)
-    {
-        restaurantDao.addUser(user)
-    }
-
-    suspend fun updateUser(user: User)
-    {
-        restaurantDao.updateUser(user)
-    }
 
 
 }

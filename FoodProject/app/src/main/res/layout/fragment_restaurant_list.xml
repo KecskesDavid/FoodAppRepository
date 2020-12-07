@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/candal"
         android:text="Restaurants"
         android:textColor="@color/gold"
@@ -31,55 +31,41 @@
 
     <!-- To add text boxes to the filter -->
 
-    <Spinner
-        android:id="@+id/countryFilter"
-        android:layout_width="200dp"
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/filterStateBtn"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/cityFilter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:text="Cities:"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"/>
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/cityFilter"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        app:layout_constraintEnd_toStartOf="@+id/filterCityBtn"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countryFilter" />
-
-    <Button
-        android:id="@+id/filterStateBtn"
-        android:layout_width="56dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="5dp"
-        android:text="Go"
-        android:background="@drawable/custom_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/countryFilter"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/filterCityBtn"
-        android:layout_width="56dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="4dp"
-        android:text="Go"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:background="@drawable/custom_button"
-        app:layout_constraintStart_toEndOf="@+id/cityFilter"
-        app:layout_constraintTop_toBottomOf="@+id/filterStateBtn" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="136dp" />
+        app:layout_constraintGuide_begin="100dp" />
 
+    <Button
+        android:id="@+id/buttonGo"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:text="GO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cityFilter"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

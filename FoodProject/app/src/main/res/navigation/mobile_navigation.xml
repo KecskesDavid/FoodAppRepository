@@ -62,5 +62,13 @@
             android:id="@+id/action_changePasswordFragment_to_navigation_profile"
             app:destination="@id/navigation_profile" />
     </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.foodproject.fragments.DetailsFragment"
+        android:label="DetailsFragment" >
+        <action
+            android:id="@+id/action_detailsFragment_to_navigation_favorites"
+            app:destination="@id/navigation_favorites" />
+    </fragment>
 
 </navigation>

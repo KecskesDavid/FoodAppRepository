@@ -33,6 +33,7 @@ import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import java.util.jar.Manifest
 
@@ -83,13 +84,6 @@ class ProfileFragment : Fragment() {
             profile_image.setOnClickListener {
                 selectImageFromGallery()
             }
-        }
-
-        if(imageUri != "")
-        {
-            Glide.with(requireContext())
-                .load(imageUri)
-                .into(profile_image)
         }
 
         login_btn.setOnClickListener {
@@ -191,6 +185,7 @@ class ProfileFragment : Fragment() {
                     .load(data?.data)
                     .into(profile_image)
             imageUri=data?.data.toString()
+            Toast.makeText(context,"To save the profile picture you have to logout first!",Toast.LENGTH_LONG).show()
         }
     }
 

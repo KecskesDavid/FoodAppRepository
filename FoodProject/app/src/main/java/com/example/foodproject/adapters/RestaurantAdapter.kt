@@ -1,5 +1,6 @@
 package com.example.foodproject.adapters
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,8 +12,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodproject.MainActivity
@@ -22,6 +25,7 @@ import com.example.foodproject.fragments.DetailsFragment
 import com.example.foodproject.data.Restaurant
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.idSP
+import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import kotlinx.android.synthetic.main.restaurant_list_item.view.*
@@ -41,6 +45,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         const val IMAGE_VIEW = "imageView"
         const val NAME_TXT = "nameTxt"
         const val ADRESS_TXT = "adressTxt"
+        const val PRICE_TXT = "priceTxt"
         const val LNG_TXT = "lngTxt"
         const val LAT_TXT = "latTxt"
         const val TELL_NR_TXT = "tellNrTxt"
@@ -76,7 +81,31 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
     //multiple times
     override fun onBindViewHolder(holder: RestaurantAdapterHolder, position: Int) {
+        val isActive = sharedPreferences.getString(nameSP,"")
         val currentItem = list[position]
+
+        if (isActive?.isEmpty() == true) {
+            holder.addToFav.visibility = View.GONE
+
+            holder.itemView.setOnLongClickListener{
+                val builder = AlertDialog.Builder(context)
+                builder.setPositiveButton("Yes"){_,_ ->
+                    //mFavoriteRestaurants.deleteRestaurant(currentItem)
+                    mFavoriteRestaurants.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer {
+                        it.forEach {
+                            if (it.user_id == sharedPreferences.getInt(idSP, 0) && it.restaurant_id == currentItem.id) {
+                                mFavoriteRestaurants.deleteFavorites(it)
+                            }
+                        }
+                        Toast.makeText(context, "Succesfully deleted: " + currentItem.name, Toast.LENGTH_SHORT).show()
+                    })
+                }
+                builder.setNegativeButton("No"){_,_->}
+                builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
+                builder.create().show()
+                return@setOnLongClickListener true
+            }
+        }
 
         GlobalScope.launch(Dispatchers.Main) {
            Glide.with(context)
@@ -89,14 +118,18 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
         mFavoritesRestaurantsViewModel.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer { resp ->
 
-            resp.forEach {
-                if(it.user_id == sharedPreferences?.getInt(idSP,0))
-                {
-                    if( currentItem.id == it.restaurant_id)
+            if (isActive?.isEmpty() == false) {
+
+                resp.forEach {
+                    if(it.user_id == sharedPreferences?.getInt(idSP,0))
                     {
-                        holder.addToFav.setImageResource(R.drawable.ic_favorite)
+                        if( currentItem.id == it.restaurant_id)
+                        {
+                            holder.addToFav.setImageResource(R.drawable.ic_favorite)
+                        }
                     }
                 }
+
             }
 
         })
@@ -113,6 +146,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             bundle.putString(LNG_TXT, currentItem.lng.toString())
             bundle.putString(TELL_NR_TXT, currentItem.phone)
             bundle.putString(RESERVE_URL, currentItem.reserve_url)
+            bundle.putString(PRICE_TXT, currentItem.price.toString())
 
             val detailsFragment = DetailsFragment()
             detailsFragment.arguments = bundle
@@ -130,26 +164,6 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
             mFavoriteRestaurants.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,sharedPreferences.getInt(idSP,0)))
             mRestaurants.addRestaurant(currentItem)
-        }
-
-        //delegate it
-        holder.itemView.setOnLongClickListener{
-            val builder = AlertDialog.Builder(context)
-            builder.setPositiveButton("Yes"){_,_ ->
-                //mFavoriteRestaurants.deleteRestaurant(currentItem)
-                mFavoriteRestaurants.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer {
-                    it.forEach {
-                        if (it.user_id == sharedPreferences.getInt(idSP, 0) && it.restaurant_id == currentItem.id) {
-                            mFavoriteRestaurants.deleteFavorites(it)
-                        }
-                    }
-                    Toast.makeText(context, "Succesfully deleted: " + currentItem.name, Toast.LENGTH_SHORT).show()
-                })
-            }
-            builder.setNegativeButton("No"){_,_->}
-            builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
-            builder.create().show()
-            return@setOnLongClickListener true
         }
 
     }
