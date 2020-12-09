@@ -19,6 +19,7 @@ import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
+import kotlinx.coroutines.runBlocking
 
 class RestarurantListFragment : Fragment(){
     //todo try so solve pages with spinner
@@ -39,6 +40,11 @@ class RestarurantListFragment : Fragment(){
         val buttonGo: Button = view.findViewById(R.id.buttonGo)
         val myAdapterCity = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, Constants.cities) }
         spinnerCity.adapter = myAdapterCity
+
+        val spinnerPageNr: Spinner = view.findViewById(R.id.pageNrSpinner)
+        val list = (1..100).toList()
+        val myAdapterPage = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, list ) }
+        spinnerPageNr.adapter = myAdapterPage
 
 
         //RecyclerView with the list of Restaurants
@@ -85,19 +91,26 @@ class RestarurantListFragment : Fragment(){
 //        }
 
         buttonGo.setOnClickListener {
+
+            adapter.setData(arrayListOf<Restaurant>())
+
             val city = spinnerCity.selectedItem.toString()
+            val page = (spinnerPageNr.selectedItem ?: 1) as Int
 
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            viewModel.getRestaurantCitiesPage(city, 1)
+            viewModel.getRestaurantCitiesPage(city, page)
 
             viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
 
                 response.body()?.restaurants?.forEach {
+
                     restaurantsToShow.add(it)
+
                 }
 
             })
+
 
             if(restaurantsToShow.size == 0) {
                 Toast.makeText(context,"No restaurants were found in this city!",Toast.LENGTH_SHORT).show()

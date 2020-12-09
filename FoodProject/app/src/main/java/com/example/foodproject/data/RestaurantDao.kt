@@ -1,8 +1,10 @@
-package com.example.foodproject.model
+package com.example.foodproject.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.foodproject.data.User
+import com.example.foodproject.model.FavoriteRestaurants
+import com.example.foodproject.model.Restaurant
+import com.example.foodproject.model.User
 
 @Dao
 interface RestaurantDao {
@@ -31,9 +33,6 @@ interface RestaurantDao {
 
     @Query("select * from users where email = :email")
     fun readUserByEmail(email: String): LiveData<User>
-
-    @Query("select exists ( select * from users where email = :email )")
-    fun checkExists(email: String): Boolean
 
 
 

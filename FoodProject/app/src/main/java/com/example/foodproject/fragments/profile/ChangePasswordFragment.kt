@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.foodproject.R
-import com.example.foodproject.data.User
+import com.example.foodproject.model.User
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.emailSP
 import com.example.foodproject.viewmodel.UserViewModel

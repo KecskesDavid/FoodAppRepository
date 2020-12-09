@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.foodproject.R
-import com.example.foodproject.data.User
+import com.example.foodproject.model.User
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.addressSP
 import com.example.foodproject.util.Constants.Companion.emailSP

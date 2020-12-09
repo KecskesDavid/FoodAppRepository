@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodproject.data.AppDatabase
 import com.example.foodproject.model.FavoriteRestaurants
 import com.example.foodproject.model.Restaurant
+import com.example.foodproject.model.User
 import com.example.foodproject.repository.RestaurantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FavoriteRestaurantsViewModel(application: Application): AndroidViewModel(application) {
 
@@ -42,6 +44,7 @@ class FavoriteRestaurantsViewModel(application: Application): AndroidViewModel(a
         }
     }
 
+    suspend fun readFavoritesById(id: Int): LiveData<List<Int>> = withContext(viewModelScope.coroutineContext) { repository.readFavoritesById(id) }
 
 
 }

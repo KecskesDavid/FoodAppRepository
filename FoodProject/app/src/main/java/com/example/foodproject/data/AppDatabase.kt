@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.foodproject.model.FavoriteRestaurants
 import com.example.foodproject.model.Restaurant
-import com.example.foodproject.model.RestaurantDao
+import com.example.foodproject.model.User
 
 @Database(entities = [Restaurant::class, FavoriteRestaurants::class, User::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

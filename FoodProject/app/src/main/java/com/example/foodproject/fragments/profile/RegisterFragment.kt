@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.foodproject.R
-import com.example.foodproject.data.User
+import com.example.foodproject.model.User
 import com.example.foodproject.util.Constants.Companion.PREFERENCES
 import com.example.foodproject.util.Constants.Companion.addressSP
 import com.example.foodproject.util.Constants.Companion.emailSP
@@ -23,6 +23,8 @@ import com.example.foodproject.util.Constants.Companion.passSP
 import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.viewmodel.UserViewModel
 import com.google.android.material.textfield.TextInputLayout
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class RegisterFragment : Fragment() {
@@ -135,8 +137,15 @@ class RegisterFragment : Fragment() {
             bool = false
         }
 
+        //valid phone number
         if (phone.editText?.text?.length != 10 || phone.editText?.text?.get(0) != '0') {
-            phone.error = "Phone number doesn't fit!"
+            phone.error = "Not valid phone number!"
+            bool = false
+        }
+
+        if(!isEmailValid(email.editText?.text?.toString()))
+        {
+            email.error = "Not valid email address!"
             bool = false
         }
 
@@ -144,6 +153,14 @@ class RegisterFragment : Fragment() {
             true -> return true
             false -> return false
         }
+
+    }
+
+    fun isEmailValid(email: String?): Boolean {
+        val EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        val pattern: Pattern = Pattern.compile(EMAIL_PATTERN)
+        val matcher: Matcher = pattern.matcher(email)
+        return matcher.matches()
     }
 
 }

@@ -21,6 +21,7 @@ import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_favorites.view.*
+import kotlinx.coroutines.runBlocking
 
 class FravoritesFragment : Fragment() {
 
@@ -39,8 +40,6 @@ class FravoritesFragment : Fragment() {
         restaurantsViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
-        setUpBottomNav()
-
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
@@ -52,28 +51,57 @@ class FravoritesFragment : Fragment() {
 
         val listOfRestaurants = restaurantsViewModel.readAllRestaurants
 
-        favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
+        val user_id = sharedPreferences?.getInt(idSP, 0)
+
+        if (user_id != 0) {
+            val favoriteRestaurants = runBlocking { favoriteRests.readFavoritesById(sharedPreferences!!.getInt(idSP, 0)) }
+
             val restaurantsToShow = arrayListOf<Restaurant>()
 
-            val user_id = sharedPreferences?.getInt(idSP, 0)
+            favoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
 
-            if (user_id != 0) {
                 response.forEach {
-
                     listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurant ->
                         for (i in restaurant) {
-                            if (it.restaurant_id == i.id && it.user_id == user_id) {
+                            if (it == i.id) {
                                 restaurantsToShow.add(i)
                                 adapter.setData(restaurantsToShow)
                                 break
                             }
                         }
                     })
-
                 }
-            }
 
-        })
+
+            })
+
+        }
+
+
+//        favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
+//            val restaurantsToShow = arrayListOf<Restaurant>()
+//
+//            val user_id = sharedPreferences?.getInt(idSP, 0)
+//
+//            if (user_id != 0) {
+//                response.forEach {
+//
+//                    listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurant ->
+//                        for (i in restaurant) {
+//                            if (it.restaurant_id == i.id && it.user_id == user_id) {
+//                                restaurantsToShow.add(i)
+//                                adapter.setData(restaurantsToShow)
+//                                break
+//                            }
+//                        }
+//                    })
+//
+//                }
+//            }
+//
+//        })
+
+        setUpBottomNav()
 
         return view
     }

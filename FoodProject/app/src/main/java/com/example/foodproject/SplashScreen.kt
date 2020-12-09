@@ -10,6 +10,7 @@ import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
+import kotlinx.coroutines.runBlocking
 
 
 class SplashScreen : AppCompatActivity() {
@@ -38,6 +39,8 @@ class SplashScreen : AppCompatActivity() {
             Constants.states = states
 
         })
+
+
 
         viewModel.myResponsCities.observe(this, Observer { response ->
 
