@@ -3,7 +3,7 @@ package com.example.foodproject.repository
 import com.example.foodproject.api.RetrofitInstance
 import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
 import retrofit2.Response
 

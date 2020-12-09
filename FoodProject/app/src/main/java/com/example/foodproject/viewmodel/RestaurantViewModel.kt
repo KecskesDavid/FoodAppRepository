@@ -6,8 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.foodproject.data.AppDatabase
 import com.example.foodproject.repository.RestaurantRepository
-import com.example.foodproject.data.Restaurant
-import com.example.foodproject.data.User
+import com.example.foodproject.model.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

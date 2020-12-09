@@ -1,7 +1,8 @@
-package com.example.foodproject.data
+package com.example.foodproject.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.foodproject.data.User
 
 @Dao
 interface RestaurantDao {

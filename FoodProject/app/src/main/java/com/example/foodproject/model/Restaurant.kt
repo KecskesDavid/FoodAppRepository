@@ -1,4 +1,4 @@
-package com.example.foodproject.data
+package com.example.foodproject.model
 
 import android.graphics.Bitmap
 import androidx.room.Entity

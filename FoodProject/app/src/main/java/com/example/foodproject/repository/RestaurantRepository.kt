@@ -1,11 +1,10 @@
 package com.example.foodproject.repository
 
 import androidx.lifecycle.LiveData
-import com.example.foodproject.data.FavoriteRestaurants
-import com.example.foodproject.data.RestaurantDao
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.FavoriteRestaurants
+import com.example.foodproject.model.RestaurantDao
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.data.User
-import kotlinx.coroutines.withContext
 
 class RestaurantRepository(private val restaurantDao: RestaurantDao) {
 

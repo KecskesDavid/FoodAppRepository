@@ -29,17 +29,12 @@ import kotlinx.coroutines.launch
 
 class DetailsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_details, container, false)
 
-        val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        navbar?.visibility = View.GONE
+        setUpBottomNav()
 
         //Getting the data from the adapter
         val image = requireArguments().get(IMAGE_VIEW).toString()
@@ -65,17 +60,17 @@ class DetailsFragment : Fragment() {
                     .load(image)
                     .into(image_view)
         }
-        name_txt.text=name.toString()
-        address_txt.text=adress.toString()
-        tell_txt.text=tell.toString()
-        price_txt.text=price.toString()
-        statecity_txt.text=city.toString()+", "+state.toString()
+        name_txt.text = name.toString()
+        address_txt.text = adress.toString()
+        tell_txt.text = tell.toString()
+        price_txt.text = price.toString()
+        statecity_txt.text = city.toString() + ", " + state.toString()
 
         //Setting up buttons for map and for searching the restaurant on the internet
         val url_Btn = view.findViewById<ImageView>(R.id.url_Btn)
         val gps_Btn = view.findViewById<ImageView>(R.id.gps_Btn)
 
-        tell_txt.setOnClickListener{
+        tell_txt.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:$tell")
             startActivity(intent)
@@ -91,13 +86,18 @@ class DetailsFragment : Fragment() {
         url_Btn.setOnClickListener {
             //If the string doesn't start with http://
             if (!reserve_url.startsWith("http://") && !reserve_url.startsWith("https://"))
-                reserve_url = "http://" + reserve_url;
+                reserve_url = "http://" + reserve_url
 
             val intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(reserve_url))
             startActivity(intent)
         }
 
         return view
+    }
+
+    private fun setUpBottomNav() {
+        val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        navbar?.visibility = View.GONE
     }
 
 }

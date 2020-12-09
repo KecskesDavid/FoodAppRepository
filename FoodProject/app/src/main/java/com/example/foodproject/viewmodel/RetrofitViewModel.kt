@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
 import com.example.foodproject.repository.RetrofitRepository
 import kotlinx.coroutines.launch

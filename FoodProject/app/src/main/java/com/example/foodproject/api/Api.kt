@@ -2,7 +2,7 @@ package com.example.foodproject.api
 
 import com.example.foodproject.model.CitiesResponse
 import com.example.foodproject.model.CountriesResponse
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
 import retrofit2.Response
 import retrofit2.http.GET

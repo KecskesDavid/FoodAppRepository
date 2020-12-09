@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
 import com.example.foodproject.viewmodel.RestaurantViewModel
@@ -33,8 +33,6 @@ class RestarurantListFragment : Fragment(){
             savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
-
-        setUpBottomNav()
 
         //Filling up spinner with cities
         val spinnerCity: Spinner = view.findViewById(R.id.cityFilter)
@@ -102,12 +100,13 @@ class RestarurantListFragment : Fragment(){
             })
 
             if(restaurantsToShow.size == 0) {
+                Toast.makeText(context,"No restaurants were found in this city!",Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
                 adapter.setData(restaurantsToShow)
             }
         }
 
+        setUpBottomNav()
 
         return view
     }

@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.foodproject.data.AppDatabase
-import com.example.foodproject.data.FavoriteRestaurants
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.FavoriteRestaurants
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.repository.RestaurantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

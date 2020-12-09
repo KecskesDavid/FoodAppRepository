@@ -2,17 +2,15 @@ package com.example.foodproject.fragments.profile
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.foodproject.R
-import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.PREFERENCES
 import com.example.foodproject.util.Constants.Companion.addressSP
 import com.example.foodproject.util.Constants.Companion.emailSP
@@ -24,17 +22,12 @@ import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.runBlocking
 
 class LoginFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view =  inflater.inflate(R.layout.fragment_login, container, false)
+        val view = inflater.inflate(R.layout.fragment_login, container, false)
 
         val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
         val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
@@ -43,7 +36,8 @@ class LoginFragment : Fragment() {
         val email = view.findViewById<TextInputLayout>(R.id.email_Text_View)
         val pass = view.findViewById<TextInputLayout>(R.id.pass_Text_view)
 
-        login_Btn.setOnClickListener{
+        login_Btn.setOnClickListener {
+            //todo
 //            val user = runBlocking{ UserViewModel.readUserByEmail(email.editText?.text.toString()) }
 //
 //            user.observe(viewLifecycleOwner, Observer {
@@ -83,37 +77,33 @@ class LoginFragment : Fragment() {
             UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { restaurant ->
 
                 var boolPass = false
-                restaurant.forEach { if( email.editText?.text.toString().equals(it.email) )
-                {
-                    if( pass.editText?.text.toString().equals(it.password) )
-                    {
-                        with (sharedPreferences!!.edit()) {
-                            putString(nameSP,it.name)
-                            putString(addressSP,it.address)
-                            putString(emailSP,it.email)
-                            putString(phoneSP,it.phone)
-                            putString(jobSP,it.job)
-                            putString(passSP,it.password)
-                            putString(photoSP,it.photo)
-                            putInt(idSP,it.id)
-                            apply()
+                restaurant.forEach {
+                    if (email.editText?.text.toString().equals(it.email)) {
+                        if (pass.editText?.text.toString().equals(it.password)) {
+                            with(sharedPreferences!!.edit()) {
+                                putString(nameSP, it.name)
+                                putString(addressSP, it.address)
+                                putString(emailSP, it.email)
+                                putString(phoneSP, it.phone)
+                                putString(jobSP, it.job)
+                                putString(passSP, it.password)
+                                putString(photoSP, it.photo)
+                                putInt(idSP, it.id)
+                                apply()
+                            }
+
+                            val nav = findNavController()
+                            nav.navigate(R.id.action_loginFragment_to_navigation_profile)
+                        } else {
+                            boolPass = true
                         }
-
-                        val nav = findNavController()
-                        nav.navigate(R.id.action_loginFragment_to_navigation_profile)
                     }
-                    else{
-                        boolPass = true
-                    }
-                }}
-
-                if( boolPass )
-                {
-                    pass.setError("Wrong password!")
                 }
-                else
-                {
-                    email.setError("Wrong email address!")
+
+                if (boolPass) {
+                    pass.error = "Wrong password!"
+                } else {
+                    email.error = "Wrong email address!"
                 }
             })
 

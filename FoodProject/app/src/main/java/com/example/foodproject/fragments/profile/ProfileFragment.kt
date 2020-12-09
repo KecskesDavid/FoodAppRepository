@@ -3,9 +3,7 @@ package com.example.foodproject.fragments.profile
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.checkSelfPermission
-
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,13 +30,11 @@ import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.util.Constants.Companion.phoneSP
 import com.example.foodproject.util.Constants.Companion.photoSP
 import com.example.foodproject.viewmodel.UserViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
-import java.util.jar.Manifest
 
 class ProfileFragment : Fragment() {
 
-    var imageUri : String = ""
+    var imageUri: String = ""
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -70,10 +65,10 @@ class ProfileFragment : Fragment() {
             val email = view.findViewById<TextView>(R.id.emailTxt)
             val job = view.findViewById<TextView>(R.id.jobTxt)
 
-            if(sharedPreferences?.getString(photoSP,"") != ""){
+            if (sharedPreferences?.getString(photoSP, "") != "") {
                 Glide.with(requireContext())
-                    .load(sharedPreferences?.getString(photoSP,""))
-                    .into(profile_image)
+                        .load(sharedPreferences?.getString(photoSP, ""))
+                        .into(profile_image)
             }
             name.text = sharedPreferences?.getString(nameSP, "")
             address.text = sharedPreferences?.getString(addressSP, "")
@@ -99,21 +94,19 @@ class ProfileFragment : Fragment() {
         }
 
         logout_btn.setOnClickListener {
-            if(imageUri!="")
-            {
+            if (imageUri != "") {
                 UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
 
                     users.forEach { user ->
 
-                        if(user.email == sharedPreferences?.getString(emailSP,""))
-                        {
-                            val new_user = User(user.id,user.name,user.email,user.address,user.job,user.phone,user.password,imageUri)
+                        if (user.email == sharedPreferences?.getString(emailSP, "")) {
+                            val new_user = User(user.id, user.name, user.email, user.address, user.job, user.phone, user.password, imageUri)
 
                             UserViewModel.updateUser(new_user)
 
-                            Toast.makeText(context,"asd",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "asd", Toast.LENGTH_SHORT).show()
 
-                            with(sharedPreferences!!.edit()) {
+                            with(sharedPreferences.edit()) {
                                 remove(nameSP)
                                 remove(addressSP)
                                 remove(emailSP)
@@ -127,8 +120,7 @@ class ProfileFragment : Fragment() {
 
                     }
                 })
-            }
-            else{
+            } else {
                 with(sharedPreferences!!.edit()) {
                     remove(nameSP)
                     remove(addressSP)
@@ -168,24 +160,22 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode)
-        {
+        when (requestCode) {
             PERMISSION_CODE -> {
-                    if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        pickImage()
-                    }
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickImage()
+                }
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE)
-        {
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE) {
             Glide.with(requireContext())
                     .load(data?.data)
                     .into(profile_image)
-            imageUri=data?.data.toString()
-            Toast.makeText(context,"To save the profile picture you have to logout first!",Toast.LENGTH_LONG).show()
+            imageUri = data?.data.toString()
+            Toast.makeText(context, "To save the profile picture you have to logout first!", Toast.LENGTH_LONG).show()
         }
     }
 

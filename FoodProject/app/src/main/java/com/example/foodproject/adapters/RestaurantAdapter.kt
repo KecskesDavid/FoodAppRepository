@@ -1,23 +1,31 @@
 package com.example.foodproject.adapters
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodproject.R
-import com.example.foodproject.data.FavoriteRestaurants
+import com.example.foodproject.model.FavoriteRestaurants
 import com.example.foodproject.fragments.details.DetailsFragment
-import com.example.foodproject.data.Restaurant
+import com.example.foodproject.model.Restaurant
 import com.example.foodproject.util.Constants
 import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.util.Constants.Companion.nameSP
@@ -27,6 +35,7 @@ import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.jar.Manifest
 
 class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>(){
 
@@ -92,10 +101,6 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
                 builder.create().show()
 
                 return@setOnClickListener
-            }
-
-            holder.imageView.setOnClickListener{
-                //todo
             }
         }
         else
