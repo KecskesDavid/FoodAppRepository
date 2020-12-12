@@ -42,7 +42,7 @@ class LoginFragment : Fragment() {
             val user = runBlocking{ UserViewModel.readUserByEmail(email.editText?.text.toString()) }
 
             user.observe(viewLifecycleOwner, Observer {
-                if(it != null ) {
+                if( it != null ) {
                     if (!it.email.isEmpty()) {
 
                         if (pass.editText?.text.toString().equals(it.password)) {

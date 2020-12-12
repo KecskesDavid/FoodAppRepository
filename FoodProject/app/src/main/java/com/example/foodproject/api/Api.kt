@@ -10,24 +10,24 @@ import retrofit2.http.Query
 
 interface Api {
 
-    @GET("/api/restaurants")
+    @GET("/restaurants")
     suspend fun getRestaurant(
             @Query("id") id : Int,
     ): Response<Restaurant>
 
-    @GET("/api/countries")
+    @GET("/countries")
     suspend fun getCountries(): Response<CountriesResponse>
 
-    @GET("/api/cities")
+    @GET("/cities")
     suspend fun getCities(): Response<CitiesResponse>
 
-    @GET("/api/restaurants")
+    @GET("/restaurants")
     suspend fun getRestaurantCountriesPage(
             @Query("state") state : String,
             @Query("page") page : Int
     ) : Response<RestaurantListResponse>
 
-    @GET("/api/restaurants")
+    @GET("/restaurants")
     suspend fun getRestaurantCitiesPage(
             @Query("city") city : String,
             @Query("page") page : Int
