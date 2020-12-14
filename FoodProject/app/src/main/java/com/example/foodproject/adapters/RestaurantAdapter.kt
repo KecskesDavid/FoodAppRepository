@@ -58,6 +58,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         const val RESERVE_URL = "reserve_url"
     }
 
+
     class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
         val imageView: ImageView = itemView.imageView
@@ -66,6 +67,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         val tellNrTxt: TextView = itemView.telNumberTxt
         val addToFav: ImageView = itemView.addToFav
         val remove: ImageView = itemView.removeBtn
+
     }
 
     //only once called
@@ -86,10 +88,10 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             holder.remove.setOnClickListener{
                 val builder = AlertDialog.Builder(context)
                 builder.setPositiveButton("Yes"){_,_ ->
-                    //mFavoriteRestaurants.deleteRestaurant(currentItem)
                     mFavoriteRestaurants.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer {
                         it.forEach {
                             if (it.user_id == sharedPreferences.getInt(idSP, 0) && it.restaurant_id == currentItem.id) {
+                                //delete only the connection between user and restaurant, the restaurant remains in the db for other users
                                 mFavoriteRestaurants.deleteFavorites(it)
                             }
                         }

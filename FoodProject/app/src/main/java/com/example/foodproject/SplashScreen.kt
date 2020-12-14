@@ -16,14 +16,11 @@ import kotlinx.coroutines.runBlocking
 
 class SplashScreen : AppCompatActivity() {
 
-//    private lateinit var mRestaurantViewModel: RestaurantViewModel
     private lateinit var viewModel: RetrofitViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
-//        mRestaurantViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
 
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
@@ -35,13 +32,8 @@ class SplashScreen : AppCompatActivity() {
 
             if(response.body() != null)
             {
-                val states = arrayListOf<String>()
-                response.body()!!.countries.forEach() { states.add(it)
-                    Log.d("logthisout",it)
-                }
-
                 //filling up utils class which contains every possible filter (state)
-                Constants.states = states
+                Constants.states = response.body()!!.countries as ArrayList<String>
             }
 
         })
@@ -51,13 +43,6 @@ class SplashScreen : AppCompatActivity() {
 
             if(response.body() != null)
             {
-//                Log.d("logthisout","ASDdd")
-//
-//                val cities = arrayListOf<String>()
-//                response.body()!!.cities.forEach() { cities.add(it)
-//                Log.d("logthisout",it)
-//                }
-
                 //filling up utils class which contains every possible filter (cities)
                 Constants.cities = response.body()!!.cities as ArrayList<String>
             }

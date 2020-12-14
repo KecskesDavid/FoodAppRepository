@@ -34,8 +34,6 @@
             app:layout_constraintTop_toTopOf="@+id/guideline"
             tools:listitem="@layout/restaurant_list_item" />
 
-        <!-- To add text boxes to the filter -->
-
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"

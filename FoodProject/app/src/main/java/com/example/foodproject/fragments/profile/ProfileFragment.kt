@@ -77,6 +77,7 @@ class ProfileFragment : Fragment() {
             job.text = sharedPreferences?.getString(jobSP, "")
 
             profile_image.setOnClickListener {
+                //function to change the profile picture
                 selectImageFromGallery()
             }
         }
@@ -94,6 +95,7 @@ class ProfileFragment : Fragment() {
         }
 
         logout_btn.setOnClickListener {
+            //if the photo is updated then i update the user then logout
             if (imageUri != "") {
                 UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
 
@@ -103,8 +105,6 @@ class ProfileFragment : Fragment() {
                             val new_user = User(user.id, user.name, user.email, user.address, user.job, user.phone, user.password, imageUri)
 
                             UserViewModel.updateUser(new_user)
-
-                            Toast.makeText(context, "asd", Toast.LENGTH_SHORT).show()
 
                             with(sharedPreferences.edit()) {
                                 remove(nameSP)
@@ -116,6 +116,7 @@ class ProfileFragment : Fragment() {
                                 nav.navigate(R.id.navigation_profile)
                                 apply()
                             }
+
                         }
 
                     }
@@ -159,6 +160,7 @@ class ProfileFragment : Fragment() {
         startActivityForResult(intent, PICK_IMAGE)
     }
 
+    //requesting permission from the user
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             PERMISSION_CODE -> {
@@ -174,6 +176,7 @@ class ProfileFragment : Fragment() {
             Glide.with(requireContext())
                     .load(data?.data)
                     .into(profile_image)
+            //saving profile pic uri in a variable, then saving it, if the user logs out
             imageUri = data?.data.toString()
             Toast.makeText(context, "To save the profile picture you have to logout first!", Toast.LENGTH_LONG).show()
         }

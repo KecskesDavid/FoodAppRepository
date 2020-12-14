@@ -8,7 +8,10 @@ import com.example.foodproject.model.CountriesResponse
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.model.RestaurantListResponse
 import com.example.foodproject.repository.RetrofitRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 
 class RetrofitViewModel(private val repository: RetrofitRepository): ViewModel() {
@@ -19,21 +22,21 @@ class RetrofitViewModel(private val repository: RetrofitRepository): ViewModel()
     val myResponsPage: MutableLiveData<Response<RestaurantListResponse>> = MutableLiveData()
 
     fun getRestaurant(id:Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main){
             val response = repository.getRestaurant(id)
             myRespons.value = response
         }
     }
 
     fun getCountries(){
-        viewModelScope.launch {
-            val response = repository.getCountries()
-            myResponsCountry.value = response
-        }
+        viewModelScope.launch{
+                val response = repository.getCountries()
+                myResponsCountry.value = response
+            }
     }
 
     fun getCities(){
-        viewModelScope.launch {
+        viewModelScope.launch{
             val response = repository.getCities()
             myResponsCities.value = response
         }

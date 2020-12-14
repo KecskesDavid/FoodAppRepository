@@ -62,7 +62,7 @@ class RegisterFragment : Fragment() {
                     }
 
                     if (bool) {
-                        Toast.makeText(context, "User added", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Succesfully registered!", Toast.LENGTH_SHORT).show()
 
                         UserViewModel.addUser(User(0, name.editText?.text.toString(), email.editText?.text.toString(), address.editText?.text.toString(), job.editText?.text.toString(), phone.editText?.text.toString(), pass1.editText?.text.toString(), ""))
 
