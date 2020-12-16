@@ -22,7 +22,7 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val repository = RetrofitRepository()
+        val repository = RetrofitRepository() //api repo
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
         viewModel.getCountries()

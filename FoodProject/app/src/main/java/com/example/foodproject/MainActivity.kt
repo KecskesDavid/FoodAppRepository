@@ -16,15 +16,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //setting up navigation controller
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
 
+        //setting up bottom navigation
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
-//        val appBarConfiguration = AppBarConfiguration(setOf(
-//                R.id.navigation_restaurant_list, R.id.navigation_favorites, R.id.navigation_profile))
-//        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
 
 

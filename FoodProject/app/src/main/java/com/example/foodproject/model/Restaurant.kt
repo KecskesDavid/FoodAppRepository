@@ -3,6 +3,7 @@ package com.example.foodproject.model
 import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.foodproject.adapters.RestaurantAdapter
 import java.net.URL
 
 @Entity(tableName = "restaurants")

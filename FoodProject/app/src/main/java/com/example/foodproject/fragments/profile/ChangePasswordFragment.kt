@@ -37,9 +37,11 @@ class ChangePasswordFragment : Fragment() {
 
         //change password
         change.setOnClickListener {
+            //go through every user, then take the one to update
             UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
 
                 users.forEach { user ->
+                    //if the data matches with the user input then the db is updated
                     if (user.email == sharedPreferences?.getString(emailSP, "")) {
                         if (checkInput(cur_password, new_password, re_new_password, user.password)) {
                             val new_user = User(user.id, user.name, user.email, user.address, user.job, user.phone, new_password.editText?.text.toString(), "")
@@ -58,6 +60,7 @@ class ChangePasswordFragment : Fragment() {
         return view
     }
 
+    //function to check the user input
     fun checkInput(cur_password: TextInputLayout, new_password: TextInputLayout, re_new_password: TextInputLayout, cur_pass_string: String): Boolean {
         var bool = true
 

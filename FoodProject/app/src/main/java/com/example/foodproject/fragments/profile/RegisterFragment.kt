@@ -38,6 +38,7 @@ class RegisterFragment : Fragment() {
         val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
 
+        //initializing ui elements
         val register_Btn = view.findViewById<Button>(R.id.register_Btn)
         val name = view.findViewById<TextInputLayout>(R.id.editTextPersonName)
         val email = view.findViewById<TextInputLayout>(R.id.editTextEmail)

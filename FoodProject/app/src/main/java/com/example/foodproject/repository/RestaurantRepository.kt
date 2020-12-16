@@ -8,6 +8,7 @@ import com.example.foodproject.model.User
 
 class RestaurantRepository(private val restaurantDao: RestaurantDao) {
 
+    //Functions for reading from Restaurant table
     val readAllRestaurant: LiveData<List<Restaurant>> = restaurantDao.readAllData()
 
     suspend fun addRestaurant(restaurant: Restaurant)
@@ -25,8 +26,11 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
         restaurantDao.updateRestaurant(restaurant)
     }
 
+    suspend fun readRestaurant(id: Int) = restaurantDao.readRestaurant(id)
 
 
+
+    //Functions for reading from User table
     val readAllUser: LiveData<List<User>> = restaurantDao.readAllDataFromUser()
 
     suspend fun addUser(user: User)
@@ -43,7 +47,7 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
 
 
 
-
+    //Functions for reading from Favorites table
     val readAllFavoriteRestaurantsRestaurant: LiveData<List<FavoriteRestaurants>> = restaurantDao.readAllDataFromFavorites()
 
     suspend fun readFavoritesById( id: Int ) = restaurantDao.readFavoritesById(id)

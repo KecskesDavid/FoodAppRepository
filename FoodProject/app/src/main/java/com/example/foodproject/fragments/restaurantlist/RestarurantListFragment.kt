@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
 import com.example.foodproject.model.Restaurant
@@ -59,6 +60,11 @@ class RestarurantListFragment : Fragment(){
         val repository = RetrofitRepository()
         val viewModelFactory = RetrofitViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
+
+        var flag=false
+
+        //this function is called every time when navigating to this page, sets placeholders in case there are no restaurants to show
+        setUpPlaceHolder(view,flag,recyclerViewRestaurant)
 
 
         //filter for states
@@ -113,15 +119,37 @@ class RestarurantListFragment : Fragment(){
 
 
             if(restaurantsToShow.size == 0) {
-                Toast.makeText(context,"No restaurants were found in this city!",Toast.LENGTH_SHORT).show()
+                flag=false
             }else{
+                flag=true
                 adapter.setData(restaurantsToShow)
             }
+            //this function should be called for every click and filter
+            setUpPlaceHolder(view,flag,recyclerViewRestaurant)
         }
-
+        
+        //this function changes the visibility of the navigation bar after returning from the details page
         setUpBottomNav()
 
         return view
+    }
+
+    private fun setUpPlaceHolder(view: View, flag: Boolean,recyclerViewRestaurant: RecyclerView) {
+        val image_place_holder = view.findViewById<ImageView>(R.id.non_ImageView)
+        val text_place_holder = view.findViewById<TextView>(R.id.non_TxtVew)
+
+        if(flag)
+        {
+            image_place_holder?.visibility=View.GONE
+            text_place_holder?.visibility=View.GONE
+            recyclerViewRestaurant.visibility=View.VISIBLE
+        }
+        else
+        {
+            image_place_holder?.visibility=View.VISIBLE
+            text_place_holder?.visibility=View.VISIBLE
+            recyclerViewRestaurant.visibility=View.GONE
+        }
     }
 
     private fun setUpBottomNav() {

@@ -7,8 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodproject.data.AppDatabase
 import com.example.foodproject.repository.RestaurantRepository
 import com.example.foodproject.model.Restaurant
+import com.example.foodproject.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RestaurantViewModel (application: Application): AndroidViewModel(application) {
 
@@ -34,4 +36,8 @@ class RestaurantViewModel (application: Application): AndroidViewModel(applicati
             repository.updateRestaurant(restaurant)
         }
     }
+
+
+    suspend fun readRestaurant(id: Int): LiveData<Restaurant> = withContext(viewModelScope.coroutineContext) { repository.readRestaurant(id) }
+
 }

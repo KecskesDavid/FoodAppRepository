@@ -15,6 +15,9 @@ interface RestaurantDao {
     @Query("select * from restaurants")
     fun readAllData(): LiveData<List<Restaurant>>
 
+    @Query("select * from restaurants where id = :id")
+    fun readRestaurant(id: Int): LiveData<Restaurant>
+
     @Delete
     suspend fun deleteRestaurant(restaurant: Restaurant)
 

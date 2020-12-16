@@ -2,13 +2,17 @@ package com.example.foodproject.fragments.favorites
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
 import com.example.foodproject.model.Restaurant
@@ -51,16 +55,17 @@ class FravoritesFragment : Fragment() {
 
         val listOfRestaurants = restaurantsViewModel.readAllRestaurants
 
-        val user_id = sharedPreferences?.getInt(idSP, 0)
+        val user_id = sharedPreferences?.getInt(idSP, 0) !!
 
         if (user_id != 0) {
-            val favoriteRestaurants = runBlocking { favoriteRests.readFavoritesById(sharedPreferences!!.getInt(idSP, 0)) }
+            val favoriteRestaurants = runBlocking { favoriteRests.readFavoritesById(sharedPreferences.getInt(idSP, 0)) }
 
-            val restaurantsToShow = arrayListOf<Restaurant>()
 
             favoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
 
                 response.forEach {
+                    val restaurantsToShow = arrayListOf<Restaurant>()
+
                     listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurant ->
                         for (i in restaurant) {
                             if (it == i.id) {
@@ -70,40 +75,39 @@ class FravoritesFragment : Fragment() {
                             }
                         }
                     })
+
+                    Log.d("asdasd",restaurantsToShow.size.toString())
                 }
 
-
             })
-
         }
 
+        //this function is called every time when navigating to this page, sets placeholders in case the user is not loged in
+        setUpPlaceHolder(view,user_id,recyclerViewRestaurant)
 
-//        favoriteRests.readAllFavoriteRestaurants.observe(viewLifecycleOwner, Observer { response ->
-//            val restaurantsToShow = arrayListOf<Restaurant>()
-//
-//            val user_id = sharedPreferences?.getInt(idSP, 0)
-//
-//            if (user_id != 0) {
-//                response.forEach {
-//
-//                    listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurant ->
-//                        for (i in restaurant) {
-//                            if (it.restaurant_id == i.id && it.user_id == user_id) {
-//                                restaurantsToShow.add(i)
-//                                adapter.setData(restaurantsToShow)
-//                                break
-//                            }
-//                        }
-//                    })
-//
-//                }
-//            }
-//
-//        })
-
+        //this function changes the visibility of the navigation bar after returning from the details page
         setUpBottomNav()
 
         return view
+    }
+
+    private fun setUpPlaceHolder(view: View, user_id: Int, recyclerViewRestaurant: RecyclerView) {
+        val image_place_holder = view.findViewById<ImageView>(R.id.non_ImageView)
+        val text_place_holder = view.findViewById<TextView>(R.id.non_TxtVew)
+
+        if(user_id != 0)
+        {
+            image_place_holder?.visibility=View.GONE
+            text_place_holder?.visibility=View.GONE
+            recyclerViewRestaurant.visibility=View.VISIBLE
+        }
+        else
+        {
+            image_place_holder?.visibility=View.VISIBLE
+            text_place_holder?.visibility=View.VISIBLE
+            recyclerViewRestaurant.visibility=View.GONE
+
+        }
     }
 
     private fun setUpBottomNav() {
