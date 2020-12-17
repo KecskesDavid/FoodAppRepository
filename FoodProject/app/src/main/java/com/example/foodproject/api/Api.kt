@@ -33,5 +33,4 @@ interface Api {
             @Query("page") page : Int
     ) : Response<RestaurantListResponse>
 
-
 }

@@ -18,6 +18,7 @@ import com.example.foodproject.model.FavoriteRestaurants
 import com.example.foodproject.fragments.details.DetailsFragment
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.util.Constants
+import com.example.foodproject.util.Constants.Companion.RESTAURANT_KEY
 import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
@@ -34,22 +35,6 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
     private var mRestaurantsViewModel: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java) //viewmodel for restaurants
     private var mFavoritesRestaurantsViewModel: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java) //viewmodel for favorite table
     private val sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE) //for login system
-
-    //key values for bundle which is sent to details fragment
-    companion object {
-        const val IMAGE_VIEW = "imageView"
-        const val REST_ID = "rest_id"
-        const val NAME_TXT = "nameTxt"
-        const val ADRESS_TXT = "adressTxt"
-        const val STATE_TXT = "state"
-        const val CITY_TXT = "city"
-        const val PRICE_TXT = "priceTxt"
-        const val LNG_TXT = "lngTxt"
-        const val LAT_TXT = "latTxt"
-        const val TELL_NR_TXT = "tellNrTxt"
-        const val RESERVE_URL = "reserve_url"
-    }
-
 
     class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -85,7 +70,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         holder.adressTxt.text=currentItem.address
 
 
-        //--- functionalities ---
+        /*--- functionalities ---*/
         val isActive = sharedPreferences.getString(nameSP,"") //taking the name field of the shared pref to check if the user is loged or not
 
         if (isActive?.isEmpty() == false) {
@@ -128,23 +113,12 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         }
 
 
-
         //opens details fragment
         holder.itemView.setOnClickListener {
 
             val bundle = Bundle() //for storing data of the current restaurant
 
-            bundle.putInt(REST_ID, currentItem.id)
-            bundle.putString(IMAGE_VIEW, currentItem.image_url)
-            bundle.putString(NAME_TXT, currentItem.name)
-            bundle.putString(ADRESS_TXT, currentItem.address)
-            bundle.putString(LAT_TXT, currentItem.lat.toString())
-            bundle.putString(LNG_TXT, currentItem.lng.toString())
-            bundle.putString(TELL_NR_TXT, currentItem.phone)
-            bundle.putString(CITY_TXT, currentItem.city)
-            bundle.putString(STATE_TXT, currentItem.state)
-            bundle.putString(RESERVE_URL, currentItem.reserve_url)
-            bundle.putString(PRICE_TXT, currentItem.price.toString())
+            bundle.putParcelable(RESTAURANT_KEY, currentItem)
 
             val detailsFragment = DetailsFragment()
             detailsFragment.arguments = bundle

@@ -15,6 +15,7 @@ import com.example.foodproject.adapters.RestaurantAdapter
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
+import com.example.foodproject.util.Constants.Companion.cities
 import com.example.foodproject.viewmodel.RestaurantViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
@@ -28,6 +29,8 @@ class RestarurantListFragment : Fragment(){
     //todo make beautiful code
     private lateinit var restaurantViewModel: RestaurantViewModel //for database
     private lateinit var viewModel: RetrofitViewModel //for retrofit
+
+    val restaurantsToShow = arrayListOf<Restaurant>()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -66,66 +69,27 @@ class RestarurantListFragment : Fragment(){
         //this function is called every time when navigating to this page, sets placeholders in case there are no restaurants to show
         setUpPlaceHolder(view,flag,recyclerViewRestaurant)
 
+        //to set up first navigation
+        viewModel.getRestaurantCitiesPage(cities[0], 1)
 
-        //filter for states
-//        spinnerCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//
-//            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-//                val city = parent.getItemAtPosition(position).toString()
-//
-//                val restaurantsToShow = arrayListOf<Restaurant>()
-//
-//                viewModel.getRestaurantCitiesPage(city, 1)
-//
-//                viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
-//
-//                    response.body()?.restaurants?.forEach {
-//                        restaurantsToShow.add(it)
-//                    }
-//
-//                })
-//
-//                if(restaurantsToShow.size == 0) {
-//                }else{
-//                    Toast.makeText(context,restaurantsToShow.size.toString()+" restaurants listed!",Toast.LENGTH_SHORT).show()
-//                    adapter.setData(restaurantsToShow)
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>) {
-//            }
-//        }
+        viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
+
+            flag = response.body()?.restaurants?.size != 0
+
+            //this function should be called for every click and filter
+            setUpPlaceHolder(view,flag,recyclerViewRestaurant)
+
+            adapter.setData(response.body()?.restaurants!!)
+
+        })
 
         buttonGo.setOnClickListener {
-
-            adapter.setData(arrayListOf<Restaurant>())
 
             val city = spinnerCity.selectedItem.toString()
             val page = (spinnerPageNr.selectedItem ?: 1) as Int
 
-            val restaurantsToShow = arrayListOf<Restaurant>()
-
             viewModel.getRestaurantCitiesPage(city, page)
 
-            viewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
-
-                response.body()?.restaurants?.forEach {
-
-                    restaurantsToShow.add(it)
-
-                }
-
-            })
-
-
-            if(restaurantsToShow.size == 0) {
-                flag=false
-            }else{
-                flag=true
-                adapter.setData(restaurantsToShow)
-            }
-            //this function should be called for every click and filter
-            setUpPlaceHolder(view,flag,recyclerViewRestaurant)
         }
         
         //this function changes the visibility of the navigation bar after returning from the details page

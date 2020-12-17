@@ -139,7 +139,7 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="35dp"
             android:fontFamily="@font/candal"
             android:text="You Can Find Us at: "
             android:textAlignment="center"
@@ -149,24 +149,25 @@
             app:layout_constraintEnd_toStartOf="@+id/gps_Btn"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline6" />
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <ImageView
             android:id="@+id/gps_Btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginTop="22dp"
             android:background="@drawable/mapbackground"
             android:src="@drawable/ic_baseline_map_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/textView10"
-            app:layout_constraintTop_toTopOf="@+id/guideline6" />
+            app:layout_constraintTop_toBottomOf="@+id/url_Btn" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="35dp"
             android:fontFamily="@font/candal"
             android:text="Visit Our Website: "
             android:textAlignment="center"
@@ -176,21 +177,7 @@
             app:layout_constraintEnd_toStartOf="@+id/url_Btn"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline8" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.6" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.7" />
+            app:layout_constraintTop_toBottomOf="@+id/price_txt" />
 
         <TextView
             android:id="@+id/price"
@@ -218,11 +205,12 @@
             android:id="@+id/url_Btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginTop="28dp"
             android:src="@drawable/ic_explore_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/textView4"
-            app:layout_constraintTop_toTopOf="@+id/guideline8" />
+            app:layout_constraintTop_toBottomOf="@+id/price_txt" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

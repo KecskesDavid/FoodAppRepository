@@ -8,6 +8,7 @@ class Constants {
         const val BASE_URL="http://ratpark-api.imok.space/"
         var states: ArrayList<String> = ArrayList()
         var cities: ArrayList<String> = ArrayList()
+        const val RESTAURANT_KEY = "resaurant_key"
         const val PREFERENCES = "MyPrefs"
         const val nameSP = "nameKey"
         const val phoneSP = "phoneKey"

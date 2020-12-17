@@ -34,7 +34,12 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
-    var imageUri: String = ""
+    companion object {
+        private const val PICK_IMAGE = 1000
+        private const val PERMISSION_CODE = 1001
+        private var imageUri = ""
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -157,6 +162,7 @@ class ProfileFragment : Fragment() {
     private fun pickImage() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
+        //opens a new activity -> image picker from gallery
         startActivityForResult(intent, PICK_IMAGE)
     }
 
@@ -180,11 +186,6 @@ class ProfileFragment : Fragment() {
             imageUri = data?.data.toString()
             Toast.makeText(context, "To save the profile picture you have to logout first!", Toast.LENGTH_LONG).show()
         }
-    }
-
-    companion object {
-        private val PICK_IMAGE = 1000
-        private val PERMISSION_CODE = 1001
     }
 
 }
