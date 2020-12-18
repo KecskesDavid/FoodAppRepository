@@ -126,13 +126,12 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             //transaction to another fragment
             val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
             transaction.replace(R.id.nav_host_fragment, detailsFragment)
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(null)
             transaction.commit()
         }
 
         //add restaurant to favorites
         holder.addToFav.setOnClickListener{
-            holder.addToFav.setImageResource(R.drawable.ic_favorite)
             Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
 
             mFavoritesRestaurantsViewModel.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,sharedPreferences.getInt(idSP,0)))
@@ -145,6 +144,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
 
     fun setData(restaurant: List<Restaurant>){
         this.listOfRestaurants = restaurant
+        //to refresh the recycler view
         notifyDataSetChanged()
     }
 
@@ -156,7 +156,6 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
                     mFavoritesRestaurantsViewModel.deleteFavorites(it)//todo at delete the list should be refreshed
                 }
             }
-            //Toast.makeText(context, "Succesfully deleted: " + currentItem.name, Toast.LENGTH_SHORT).show()
         })
     }
 

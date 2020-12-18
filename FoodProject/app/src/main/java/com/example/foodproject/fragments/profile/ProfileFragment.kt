@@ -87,18 +87,22 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        //navigation to login fragment
         login_btn.setOnClickListener {
             nav.navigate(R.id.action_navigation_profile_to_loginFragment)
         }
 
+        //navigation to register fragment
         register_btn.setOnClickListener {
             nav.navigate(R.id.action_navigation_profile_to_registerFragment)
         }
 
+        //navigation to change pass fragment
         change_pass_btn.setOnClickListener {
             nav.navigate(R.id.action_navigation_profile_to_changePasswordFragment)
         }
 
+        //logout button to save photo and remove everything from shared pref
         logout_btn.setOnClickListener {
             //if the photo is updated then i update the user then logout
             if (imageUri != "") {
@@ -111,7 +115,7 @@ class ProfileFragment : Fragment() {
 
                             UserViewModel.updateUser(new_user)
 
-                            with(sharedPreferences.edit()) {
+                            with(sharedPreferences.edit()) { //clear shared pref file
                                 remove(nameSP)
                                 remove(addressSP)
                                 remove(emailSP)

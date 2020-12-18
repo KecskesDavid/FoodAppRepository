@@ -30,7 +30,7 @@ class LoginFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE) // I used shared pref. for saving the current user loged in
         val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         val login_Btn = view.findViewById<Button>(R.id.login_Btn)
@@ -42,11 +42,12 @@ class LoginFragment : Fragment() {
             val user = runBlocking{ UserViewModel.readUserByEmail(email.editText?.text.toString()) }
 
             user.observe(viewLifecycleOwner, Observer {
+                //checking if a registered user
                 if( it != null ) {
                     if (!it.email.isEmpty()) {
 
                         if (pass.editText?.text.toString().equals(it.password)) {
-                            with(sharedPreferences!!.edit()) {
+                            with(sharedPreferences!!.edit()) { //set up user, saving the data to use it to display it on the profile fragment and for cheking if the user is loged in
                                 putString(nameSP, it.name)
                                 putString(addressSP, it.address)
                                 putString(emailSP, it.email)

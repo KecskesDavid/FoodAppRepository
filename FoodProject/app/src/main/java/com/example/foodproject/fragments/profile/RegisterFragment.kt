@@ -49,30 +49,25 @@ class RegisterFragment : Fragment() {
         val phone = view.findViewById<TextInputLayout>(R.id.editTextPhone)
 
         register_Btn.setOnClickListener {
-
+            //check the given input
             if (checkInput(name, email, address, pass1, pass2, phone, job)) {
 
-                UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { user ->
+                UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { user -> //check if the email addres is already taken
 
-                    var bool = true
+                    var isInputOK = true
                     user.forEach {
                         if (it.email.equals(email.editText?.text.toString())) {
                             email.error = "This email address is already taken!"
-                            bool = false
+                            isInputOK = false
                         }
                     }
 
-                    if (bool) {
+                    if (isInputOK) { //if everything is ok, then saving data in db
                         Toast.makeText(context, "Succesfully registered!", Toast.LENGTH_SHORT).show()
 
                         UserViewModel.addUser(User(0, name.editText?.text.toString(), email.editText?.text.toString(), address.editText?.text.toString(), job.editText?.text.toString(), phone.editText?.text.toString(), pass1.editText?.text.toString(), ""))
 
-                        UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { restaurant ->
-
-                            restaurant.forEach {
-                                if (it.email.equals(email.editText?.text.toString())) {
-
-                                    with(sharedPreferences!!.edit()) {
+                        with(sharedPreferences!!.edit()) {
                                         putString(nameSP, name.editText?.text.toString())
                                         putString(addressSP, address.editText?.text.toString())
                                         putString(emailSP, email.editText?.text.toString())
@@ -83,13 +78,8 @@ class RegisterFragment : Fragment() {
                                         apply()
                                     }
 
-                                    //navigate back to profile loged in
-                                    val nav = findNavController()
-                                    nav.navigate(R.id.action_registerFragment_to_navigation_profile)
-                                }
-                            }
-
-                        })
+                        val nav = findNavController()
+                        nav.navigate(R.id.action_registerFragment_to_navigation_profile)
 
                     }
                 })
@@ -101,7 +91,7 @@ class RegisterFragment : Fragment() {
     }
 
     fun checkInput(name: TextInputLayout, email: TextInputLayout, address: TextInputLayout, pass1: TextInputLayout, pass2: TextInputLayout, phone: TextInputLayout, job: TextInputLayout): Boolean {
-        var bool: Boolean = true
+        var bool = true
         //if any of this are empty then set an error message
         if (name.editText?.text?.isEmpty() == true) {
             name.error = "Empty field!"

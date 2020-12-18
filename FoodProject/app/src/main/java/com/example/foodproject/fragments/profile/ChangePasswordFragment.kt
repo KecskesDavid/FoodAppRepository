@@ -77,18 +77,19 @@ class ChangePasswordFragment : Fragment() {
             bool = false
         }
 
-        //passwords doesn't match
+        //passwords do not match
         if (!new_password.editText?.text.toString().equals(re_new_password.editText?.text.toString())) {
             re_new_password.error = "The passwords do not match!"
             bool = false
         }
 
+        //if the new and the old are the same
         if (new_password.editText?.text.toString().equals(cur_password.editText?.text.toString())) {
             new_password.error = "Current and New cannot match!"
             bool = false
         }
 
-
+        //if the current password do not match with the given one, safety check
         if (!cur_password.editText?.text.toString().equals(cur_pass_string)) {
             cur_password.error = "Wrong password!"
             bool = false

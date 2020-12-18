@@ -30,11 +30,6 @@ class DetailsFragment : Fragment() {
 
     private lateinit var viewModel: RetrofitViewModel
 
-//    companion object {
-//        private const val REQUEST_CODE = 42
-//        private lateinit var imageUri: Bitmap
-//    }
-
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -99,28 +94,12 @@ class DetailsFragment : Fragment() {
             startActivity(intent)
         }
 
-//        profile_image.setOnClickListener{
-//            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//
-//            startActivityForResult(intent, REQUEST_CODE)
-//        }
-
         //making bottom nav gone
         setUpBottomNav()
 
         return view
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if( requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK)
-//        {
-//            imageUri = data?.extras?.get("data") as Bitmap
-//        }
-//        else
-//        {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
 
     private fun setUpBottomNav() {
         val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)

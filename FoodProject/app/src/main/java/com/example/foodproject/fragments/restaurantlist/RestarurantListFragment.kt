@@ -24,13 +24,9 @@ import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
 import kotlinx.coroutines.runBlocking
 
 class RestarurantListFragment : Fragment(){
-    //todo try so solve pages with spinner
     //todo try test everything
-    //todo make beautiful code
     private lateinit var restaurantViewModel: RestaurantViewModel //for database
     private lateinit var viewModel: RetrofitViewModel //for retrofit
-
-    val restaurantsToShow = arrayListOf<Restaurant>()
 
     override fun onCreateView(
             inflater: LayoutInflater,
