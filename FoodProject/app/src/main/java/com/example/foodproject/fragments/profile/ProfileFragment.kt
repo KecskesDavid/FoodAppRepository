@@ -34,6 +34,8 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
+    private lateinit var userViewModel: UserViewModel //viewmodel for users table
+
     companion object {
         private const val PICK_IMAGE = 1000
         private const val PERMISSION_CODE = 1001
@@ -47,7 +49,7 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
-        val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         val profile_image = view.findViewById<ImageView>(R.id.profile_image)
         val login_btn = view.findViewById<Button>(R.id.to_Login_Btn)
@@ -106,14 +108,14 @@ class ProfileFragment : Fragment() {
         logout_btn.setOnClickListener {
             //if the photo is updated then i update the user then logout
             if (imageUri != "") {
-                UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
+                userViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
 
                     users.forEach { user ->
 
                         if (user.email == sharedPreferences?.getString(emailSP, "")) {
                             val new_user = User(user.id, user.name, user.email, user.address, user.job, user.phone, user.password, imageUri)
 
-                            UserViewModel.updateUser(new_user)
+                            userViewModel.updateUser(new_user)
 
                             with(sharedPreferences.edit()) { //clear shared pref file
                                 remove(nameSP)

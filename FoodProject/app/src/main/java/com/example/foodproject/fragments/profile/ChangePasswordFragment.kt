@@ -20,12 +20,14 @@ import com.google.android.material.textfield.TextInputLayout
 
 class ChangePasswordFragment : Fragment() {
 
+    private lateinit var userViewModel: UserViewModel //viewmodel for users table
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_change_password, container, false)
-        val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
         val change = view.findViewById<Button>(R.id.change_Btn)
@@ -38,7 +40,7 @@ class ChangePasswordFragment : Fragment() {
         //change password
         change.setOnClickListener {
             //go through every user, then take the one to update
-            UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
+            userViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { users ->
 
                 users.forEach { user ->
                     //if the data matches with the user input then the db is updated
@@ -46,7 +48,7 @@ class ChangePasswordFragment : Fragment() {
                         if (checkInput(cur_password, new_password, re_new_password, user.password)) {
                             val new_user = User(user.id, user.name, user.email, user.address, user.job, user.phone, new_password.editText?.text.toString(), "")
 
-                            UserViewModel.updateUser(new_user)
+                            userViewModel.updateUser(new_user)
 
                             nav.navigate(R.id.action_changePasswordFragment_to_navigation_profile)
                         }

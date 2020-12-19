@@ -29,13 +29,15 @@ import java.util.regex.Pattern
 
 class RegisterFragment : Fragment() {
 
+    private lateinit var userViewModel: UserViewModel //viewmodel for users table
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-        val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
 
         //initializing ui elements
@@ -52,7 +54,7 @@ class RegisterFragment : Fragment() {
             //check the given input
             if (checkInput(name, email, address, pass1, pass2, phone, job)) {
 
-                UserViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { user -> //check if the email addres is already taken
+                userViewModel.readAllUsers.observe(viewLifecycleOwner, Observer { user -> //check if the email addres is already taken
 
                     var isInputOK = true
                     user.forEach {
@@ -65,7 +67,7 @@ class RegisterFragment : Fragment() {
                     if (isInputOK) { //if everything is ok, then saving data in db
                         Toast.makeText(context, "Succesfully registered!", Toast.LENGTH_SHORT).show()
 
-                        UserViewModel.addUser(User(0, name.editText?.text.toString(), email.editText?.text.toString(), address.editText?.text.toString(), job.editText?.text.toString(), phone.editText?.text.toString(), pass1.editText?.text.toString(), ""))
+                        userViewModel.addUser(User(0, name.editText?.text.toString(), email.editText?.text.toString(), address.editText?.text.toString(), job.editText?.text.toString(), phone.editText?.text.toString(), pass1.editText?.text.toString(), ""))
 
                         with(sharedPreferences!!.edit()) {
                                         putString(nameSP, name.editText?.text.toString())

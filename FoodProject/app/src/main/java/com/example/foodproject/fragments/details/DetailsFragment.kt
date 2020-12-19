@@ -1,12 +1,9 @@
 package com.example.foodproject.fragments.details
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,13 +19,14 @@ import com.example.foodproject.util.Constants.Companion.RESTAURANT_KEY
 import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class DetailsFragment : Fragment() {
 
-    private lateinit var viewModel: RetrofitViewModel
+    private lateinit var retrofitViewModel: RetrofitViewModel //viewmodel for retrofit
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +35,7 @@ class DetailsFragment : Fragment() {
 
         val repository = RetrofitRepository() //api repo
         val viewModelFactory = RetrofitViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
+        retrofitViewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
 
         //Getting the data from the adapter, one restaurant item
         val restaurantToShow : Restaurant = requireArguments().getParcelable(RESTAURANT_KEY) !!

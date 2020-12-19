@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foodproject.R
 import com.example.foodproject.adapters.RestaurantAdapter
+import com.example.foodproject.fragments.details.DetailsFragment
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.repository.RetrofitRepository
 import com.example.foodproject.util.Constants
@@ -26,11 +29,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_favorites.view.*
 import kotlinx.coroutines.runBlocking
 
-class FravoritesFragment : Fragment() {
+class FravoritesFragment : Fragment() , RestaurantAdapter.OnItemClickListener// -> the one created in the adapter to migrate the functionalities to the fragments
+{
 
-    private lateinit var favoriteRests: FavoriteRestaurantsViewModel
-    private lateinit var restaurantsViewModel: RestaurantViewModel
-    private lateinit var viewModel: RetrofitViewModel
+    private lateinit var retrofitViewModel: RetrofitViewModel //viewmodel for retrofit
+    private lateinit var restaurantViewModel: RestaurantViewModel //viewmodel for favorite table
+    private lateinit var favoriteRestaurantViewModel: FavoriteRestaurantsViewModel //viewmodel for favorite table
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -39,35 +43,36 @@ class FravoritesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
 
-        favoriteRests = ViewModelProvider(this).get(FavoriteRestaurantsViewModel::class.java)
-        restaurantsViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
+        val repository = RetrofitRepository()//api repo
+        val viewModelFactory = RetrofitViewModelFactory(repository)
+        retrofitViewModel = ViewModelProvider(this,viewModelFactory).get(RetrofitViewModel::class.java)
+        restaurantViewModel = ViewModelProvider(this).get(RestaurantViewModel::class.java)
+        favoriteRestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java)
         val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 
-        val repository = RetrofitRepository()
-        val viewModelFactory = RetrofitViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
 
-        val adapter = RestaurantAdapter(requireContext())
+
+        val adapter = RestaurantAdapter(requireContext(),this)
         val recyclerViewRestaurant = view.favRestaurantRecView
         recyclerViewRestaurant.adapter = adapter
         recyclerViewRestaurant.layoutManager = LinearLayoutManager(requireContext())
 
-        val listOfRestaurants = restaurantsViewModel.readAllRestaurants //saving every restaurant from database
+        val listOfRestaurants = restaurantViewModel.readAllRestaurants //saving every restaurant from database
 
         val isActiveUser = sharedPreferences?.getInt(idSP, 0) ?: 0
 
         if (isActiveUser != 0) { //check if the user is loged in
-            val favoriteRestaurants = runBlocking { favoriteRests.readFavoritesById(isActiveUser) }  // taking every like restaurant by the loged in use
+            val favoriteRestaurants = runBlocking { favoriteRestaurantViewModel.readFavoritesById(isActiveUser) }  // taking every like restaurant by the loged in use
 
             favoriteRestaurants.observe(viewLifecycleOwner, Observer { likedRestaurantsIDs -> //observing these id-s
 
-                listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurant -> //then filtering the saved restaurants
+                listOfRestaurants.observe(viewLifecycleOwner, Observer { restaurants -> //then filtering the saved restaurants
                     val restaurantsToShow = arrayListOf<Restaurant>()
 
-                    for (i in restaurant) {
-                        likedRestaurantsIDs.forEach {
-                            if (it == i.id) {
-                                restaurantsToShow.add(i)
+                    for (restaurant in restaurants) {
+                        likedRestaurantsIDs.forEach { idOfRest ->
+                            if (idOfRest == restaurant.id) {
+                                restaurantsToShow.add(restaurant)
                             }
                         }
                     }
@@ -106,5 +111,24 @@ class FravoritesFragment : Fragment() {
     private fun setUpBottomNav() {
         val navbar = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         navbar?.visibility = View.VISIBLE
+    }
+
+    //delegation
+    //overriding this function to implement the functionality of the adapter -> to navigate to other page
+    override fun onItemClick(itemView: View, restaurant: Restaurant) {
+
+        val bundle = Bundle() //for storing data of the current restaurant
+
+        bundle.putParcelable(Constants.RESTAURANT_KEY, restaurant)
+
+        val detailsFragment = DetailsFragment()
+        detailsFragment.arguments = bundle
+
+        //transaction to another fragment
+        val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment, detailsFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 }

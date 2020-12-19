@@ -22,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
         val migration_1_2: Migration = object: Migration(1,2)
         {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("DROP TABLE restaurants")
+                database.execSQL("DROP TABLE restaurants") //droped and recreated this table because I made some mistakes when created it
                 database.execSQL("CREATE TABLE IF NOT EXISTS `restaurants` (`id` INTEGER NOT NULL,`name` TEXT NOT NULL,`address` TEXT NOT NULL,`city` TEXT NOT NULL,`state` TEXT NOT NULL,`area` TEXT NOT NULL,`postal_code` TEXT NOT NULL,`country` TEXT NOT NULL,`phone` TEXT NOT NULL,`lat` REAL NOT NULL,`lng` REAL NOT NULL,`price` INTEGER NOT NULL,`reserve_url` TEXT NOT NULL,`mobile_reserve_url` TEXT NOT NULL,`image_url` TEXT NOT NULL, PRIMARY KEY(`id`))")
                 database.execSQL("CREATE TABLE IF NOT EXISTS `favorite_restaurants` (`id` INTEGER NOT NULL ,`restaurant_id` INTEGER NOT NULL,`user_id` INTEGER NOT NULL, PRIMARY KEY(`id`))")
             }

@@ -26,12 +26,14 @@ import kotlinx.coroutines.runBlocking
 
 class LoginFragment : Fragment() {
 
+    private lateinit var userViewModel: UserViewModel //viewmodel for users table
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
         val sharedPreferences = context?.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE) // I used shared pref. for saving the current user loged in
-        val UserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         val login_Btn = view.findViewById<Button>(R.id.login_Btn)
         val email = view.findViewById<TextInputLayout>(R.id.email_Text_View)
@@ -39,7 +41,7 @@ class LoginFragment : Fragment() {
 
         login_Btn.setOnClickListener {
 
-            val user = runBlocking{ UserViewModel.readUserByEmail(email.editText?.text.toString()) }
+            val user = runBlocking{ userViewModel.readUserByEmail(email.editText?.text.toString()) }
 
             user.observe(viewLifecycleOwner, Observer {
                 //checking if a registered user

@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 
 class SplashScreen : AppCompatActivity() {
 
-    private lateinit var viewModel: RetrofitViewModel
+    private lateinit var retrofitViewModel: RetrofitViewModel //viewmodel for retrofit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +24,11 @@ class SplashScreen : AppCompatActivity() {
 
         val repository = RetrofitRepository() //api repo
         val viewModelFactory = RetrofitViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
-        viewModel.getCountries()
-        viewModel.getCities()
+        retrofitViewModel = ViewModelProvider(this, viewModelFactory).get(RetrofitViewModel::class.java)
+        retrofitViewModel.getCountries()
+        retrofitViewModel.getCities()
 
-        viewModel.myResponsCountry.observe(this, Observer { response ->
+        retrofitViewModel.myResponsCountry.observe(this, Observer { response ->
 
             if(response.body() != null)
             {
@@ -38,8 +38,8 @@ class SplashScreen : AppCompatActivity() {
 
         })
 
-        
-        viewModel.myResponsCities.observe(this, Observer { response ->
+
+        retrofitViewModel.myResponsCities.observe(this, Observer { response ->
 
             if(response.body() != null)
             {

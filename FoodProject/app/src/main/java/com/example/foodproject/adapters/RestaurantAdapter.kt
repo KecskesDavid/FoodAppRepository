@@ -2,23 +2,19 @@ package com.example.foodproject.adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodproject.R
 import com.example.foodproject.model.FavoriteRestaurants
-import com.example.foodproject.fragments.details.DetailsFragment
 import com.example.foodproject.model.Restaurant
 import com.example.foodproject.util.Constants
-import com.example.foodproject.util.Constants.Companion.RESTAURANT_KEY
 import com.example.foodproject.util.Constants.Companion.idSP
 import com.example.foodproject.util.Constants.Companion.nameSP
 import com.example.foodproject.viewmodel.FavoriteRestaurantsViewModel
@@ -27,16 +23,15 @@ import kotlinx.android.synthetic.main.restaurant_list_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 
-class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>()/*, ActionMode.Callback*/
+class RestaurantAdapter(private val context: Context, private val listener: OnItemClickListener): RecyclerView.Adapter<RestaurantAdapter.RestaurantAdapterHolder>()
 {
     private var listOfRestaurants = emptyList<Restaurant>() // list for restaurants
-    private var mRestaurantsViewModel: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java) //viewmodel for restaurants
-    private var mFavoritesRestaurantsViewModel: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java) //viewmodel for favorite table
+    private var restaurantsViewModel: RestaurantViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(RestaurantViewModel::class.java) //viewmodel for restaurants table
+    private var favoritesRestaurantsViewModel: FavoriteRestaurantsViewModel = ViewModelProvider(context as ViewModelStoreOwner).get(FavoriteRestaurantsViewModel::class.java) //viewmodel for favorite table
     private val sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE) //for login system
 
-    class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class RestaurantAdapterHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         //binding ui element with value
         val imageView: ImageView = itemView.imageView
@@ -44,14 +39,29 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
         val adressTxt: TextView = itemView.adressTxt
         val tellNrTxt: TextView = itemView.telNumberTxt
         val addToFav: ImageView = itemView.addToFav
-        val remove: ImageView = itemView.removeBtn
+        val removeBtn: ImageView = itemView.removeBtn
 
+        init{
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            //delegating the click to the fragment
+            listener.onItemClick(itemView,listOfRestaurants[adapterPosition])
+        }
+
+    }
+
+    //whatever fragment/activity implement the adapter, should implement this interface as well
+    interface OnItemClickListener{
+        //the fragment/activity overrides this function and implements the functionality of the recycler view adapter
+        fun onItemClick(itemView: View, restaurant: Restaurant) //passing the whole item because in the fragment the data is only observed, so it is not saved in an arraylist
     }
 
     //only once called
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantAdapterHolder {
+        //inflating the itemview with the listitem layout
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.restaurant_list_item, parent, false)
-
         return RestaurantAdapterHolder(itemView)
     }
 
@@ -77,12 +87,11 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             holder.addToFav.visibility = View.VISIBLE //changing adapter view
 
             //event to remove an item from favorites
-            holder.remove.setOnClickListener{
+            holder.removeBtn.setOnClickListener{
                 val builder = AlertDialog.Builder(context)
                 builder.setPositiveButton("Yes"){_,_ ->
-
-                    deleteRestaurantFromDatabase(mFavoritesRestaurantsViewModel,currentItem)
-
+                    //function which deletes the current restaurant and the user from the favorites table
+                    deleteRestaurantFromDatabase(favoritesRestaurantsViewModel,currentItem)
                 }
                 builder.setNegativeButton("No"){_,_->}
                 builder.setMessage("Are you sure you want to delete ${currentItem.name}?")
@@ -92,13 +101,14 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             }
 
             //changing ui of adapter
-            mFavoritesRestaurantsViewModel.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer { resp ->
+            favoritesRestaurantsViewModel.readAllFavoriteRestaurants.observe(context as LifecycleOwner, Observer { resp ->
+
                 resp.forEach {
                     if(it.user_id == sharedPreferences?.getInt(idSP,0))
                     {
                         if( currentItem.id == it.restaurant_id)
                         {
-                            holder.remove.visibility = View.VISIBLE
+                            holder.removeBtn.visibility = View.VISIBLE
                             holder.addToFav.setImageResource(R.drawable.ic_favorite)
                         }
                     }
@@ -112,30 +122,12 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             holder.addToFav.visibility = View.GONE
         }
 
-
-        //opens details fragment
-        holder.itemView.setOnClickListener {
-
-            val bundle = Bundle() //for storing data of the current restaurant
-
-            bundle.putParcelable(RESTAURANT_KEY, currentItem)
-
-            val detailsFragment = DetailsFragment()
-            detailsFragment.arguments = bundle
-
-            //transaction to another fragment
-            val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.nav_host_fragment, detailsFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-
         //add restaurant to favorites
         holder.addToFav.setOnClickListener{
             Toast.makeText(context,"Restaurant added to favorites!",Toast.LENGTH_SHORT).show()
 
-            mFavoritesRestaurantsViewModel.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,sharedPreferences.getInt(idSP,0)))
-            mRestaurantsViewModel.addRestaurant(currentItem)
+            favoritesRestaurantsViewModel.addFavoriteRestaurants(FavoriteRestaurants(0,currentItem.id,sharedPreferences.getInt(idSP,0)))
+            restaurantsViewModel.addRestaurant(currentItem)
         }
 
     }
@@ -153,7 +145,7 @@ class RestaurantAdapter(val context: Context): RecyclerView.Adapter<RestaurantAd
             it.forEach {
                 if (it.user_id == sharedPreferences.getInt(idSP, 0) && it.restaurant_id == currentItem.id) {
                     //delete only the connection between user and restaurant, the restaurant remains in the db for other users
-                    mFavoritesRestaurantsViewModel.deleteFavorites(it)//todo at delete the list should be refreshed
+                    mFavoritesRestaurantsViewModel.deleteFavorites(it)
                 }
             }
         })
