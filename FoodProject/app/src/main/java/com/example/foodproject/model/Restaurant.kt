@@ -12,7 +12,8 @@ import java.net.URL
 @Parcelize
 data class Restaurant (
     @PrimaryKey(autoGenerate = false)
-    val id: Int,
+//    val id: Int,
+    val id: Long,
     val name: String,
     val address: String,
     val city: String,

@@ -106,7 +106,7 @@ class RestaurantAdapter(private val context: Context, private val listener: OnIt
                 resp.forEach {
                     if(it.user_id == sharedPreferences?.getInt(idSP,0))
                     {
-                        if( currentItem.id == it.restaurant_id)
+                        if( currentItem.id == it.restaurant_id )
                         {
                             holder.removeBtn.visibility = View.VISIBLE
                             holder.addToFav.setImageResource(R.drawable.ic_favorite)

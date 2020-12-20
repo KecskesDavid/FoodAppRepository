@@ -41,7 +41,7 @@ interface RestaurantDao {
 
 
     @Query("select restaurant_id from favorite_restaurants where user_id = :id")
-    fun readFavoritesById(id: Int): LiveData<List<Int>>
+    fun readFavoritesById(id: Int): LiveData<List<Long>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFavoriteRestaurants(favoriteRestaurants: FavoriteRestaurants)

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class FavoriteRestaurants(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val restaurant_id: Int,
+    val restaurant_id: Long,
     val user_id: Int,
 ) {
 }

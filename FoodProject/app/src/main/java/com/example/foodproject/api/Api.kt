@@ -27,7 +27,7 @@ interface Api {
             @Query("page") page : Int
     ) : Response<RestaurantListResponse>
 
-    @GET("/restaurants")
+    @GET("/restaurants")//somehow, when the query parameters are encoded the encoded string is not what the url is supposed to search, so there is no result in some cases
     suspend fun getRestaurantCitiesPage(
             @Query("city") city : String,
             @Query("page") page : Int

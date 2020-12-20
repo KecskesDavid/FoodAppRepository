@@ -44,7 +44,8 @@ class FavoriteRestaurantsViewModel(application: Application): AndroidViewModel(a
         }
     }
 
-    suspend fun readFavoritesById(id: Int): LiveData<List<Int>> = withContext(viewModelScope.coroutineContext) { repository.readFavoritesById(id) }
+//    suspend fun readFavoritesById(id: Int): LiveData<List<Int>> = withContext(viewModelScope.coroutineContext) { repository.readFavoritesById(id) }
+    suspend fun readFavoritesById(id: Int): LiveData<List<Long>> = withContext(viewModelScope.coroutineContext) { repository.readFavoritesById(id) }
 
 
 }

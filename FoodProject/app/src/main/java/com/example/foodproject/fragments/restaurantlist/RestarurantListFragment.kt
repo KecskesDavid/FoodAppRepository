@@ -1,5 +1,9 @@
 package com.example.foodproject.fragments.restaurantlist
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,11 +30,10 @@ import com.example.foodproject.viewmodel.RetrofitViewModel
 import com.example.foodproject.viewmodel.RetrofitViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_restaurant_list.view.*
-import kotlinx.android.synthetic.main.restaurant_list_item.view.*
+import java.net.URLEncoder
 
 class RestarurantListFragment : Fragment(),RestaurantAdapter.OnItemClickListener// -> the one created in the adapter to migrate the functionalities to the fragments
 {
-    //todo try test everything
     private lateinit var retrofitViewModel: RetrofitViewModel //viewmodel for retrofit
     private lateinit var restaurantViewModel: RestaurantViewModel //viewmodel for favorite table
     private lateinit var favoriteRestaurantViewModel: FavoriteRestaurantsViewModel //viewmodel for favorite table
@@ -70,30 +73,43 @@ class RestarurantListFragment : Fragment(),RestaurantAdapter.OnItemClickListener
 
         var flag=false
 
-        //this function is called every time when navigating to this page, sets placeholders in case there are no restaurants to show
-        setUpPlaceHolder(view,flag,recyclerViewRestaurant)
-
-        //to set up first navigation
-        retrofitViewModel.getRestaurantCitiesPage(cities[0], 1)
-
-        retrofitViewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response ->
-
-            flag = response.body()?.restaurants?.size != 0
-
-            //this function should be called for every click and filter
+        if(isNetworkAvailable(context))
+        {
+            //this function is called every time when navigating to this page, sets placeholders in case there are no restaurants to show
             setUpPlaceHolder(view,flag,recyclerViewRestaurant)
 
-            adapter.setData(response.body()?.restaurants!!)
+            //to set up first navigation
+            retrofitViewModel.getRestaurantCitiesPage(cities[0], 1)
 
-        })
+            retrofitViewModel.myResponsPage.observe(viewLifecycleOwner, Observer { response -> //somehow, when the query parameters are encoded the encoded string is not what the url is supposed to search, so there is no result in some cases
 
-        buttonGo.setOnClickListener {
+                flag = response.body()?.restaurants?.size != 0
 
-            val city = spinnerCity.selectedItem.toString()
-            val page = (spinnerPageNr.selectedItem ?: 1) as Int
+                //this function should be called for every click and filter
+                setUpPlaceHolder(view,flag,recyclerViewRestaurant)
 
-            retrofitViewModel.getRestaurantCitiesPage(city, page)
+                adapter.setData(response.body()?.restaurants!!)
 
+            })
+
+            buttonGo.setOnClickListener {
+
+                val city = spinnerCity.selectedItem.toString()
+                val page = (spinnerPageNr.selectedItem ?: 1) as Int
+
+                //try to use this to convert my queried city, but did not work
+                //val encodedstring = URLEncoder.encode(city, "utf-8") //encoding the special characters
+                if(isNetworkAvailable(context)){
+                    retrofitViewModel.getRestaurantCitiesPage(city, page)
+                }
+                else{
+                    Toast.makeText(context,"You should connect to internet first!",Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+        else{
+            Toast.makeText(context,"There is no internet connection!",Toast.LENGTH_SHORT).show()
         }
         
         //this function changes the visibility of the navigation bar after returning from the details page
@@ -142,5 +158,32 @@ class RestarurantListFragment : Fragment(),RestaurantAdapter.OnItemClickListener
         transaction.addToBackStack(null)
         transaction.commit()
 
+    }
+
+    fun isNetworkAvailable(context: Context?): Boolean {
+        if (context == null) return false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                        return true
+                    }
+                }
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                return true
+            }
+        }
+        return false
     }
 }

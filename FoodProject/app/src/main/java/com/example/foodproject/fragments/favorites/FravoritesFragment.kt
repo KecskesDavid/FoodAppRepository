@@ -71,7 +71,7 @@ class FravoritesFragment : Fragment() , RestaurantAdapter.OnItemClickListener// 
 
                     for (restaurant in restaurants) {
                         likedRestaurantsIDs.forEach { idOfRest ->
-                            if (idOfRest == restaurant.id) {
+                            if ( idOfRest == restaurant.id ) {
                                 restaurantsToShow.add(restaurant)
                             }
                         }
