@@ -1,6 +1,6 @@
 # Favorite Bites -  Android Application
 
-** Version 1.1.0 **
+** Version 1.1.1 **
 
 ### An application for managing your favorite restaurants and places from USA.
 
@@ -21,7 +21,7 @@ By adding to favorites the user can create a uniq list of restaurants, from whic
 
 ## Contributors
 
-- Kecskés-Kerestély Dávid-Attila <kecskesdavid@yahoo.com
+- Kecskés-Kerestély Dávid-Attila <kecskesdavid@yahoo.com>
 
 ## License & copyright
 
